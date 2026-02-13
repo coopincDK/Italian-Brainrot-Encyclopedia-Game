@@ -1,0 +1,353 @@
+// ============================================
+// ITALIAN BRAINROT - KOMPLET KARAKTER DATABASE
+// Baseret på Namu Wiki og officielle kilder
+// Bruger rigtige billeder fra images/ mappen
+// ============================================
+
+window.italianBrainrotCharacters = [
+    // ===== HOVEDKARAKTERER (5 STJERNER) =====
+    {
+        letter: 'T',
+        name: 'TRALALERO TRALALA',
+        emoji: '🦈',
+        description: 'Den originale! En tre-benet haj der bærer Nike sneakers. Karakteren der startede det hele! Atletisk legende der kan løbe i overmenneskelige hastigheder og hoppe utroligt højt.',
+        descriptionEN: 'The original! A three-legged shark wearing Nike sneakers. The character that started it all! Athletic legend who can run at superhuman speeds and jump incredibly high.',
+        descriptionDE: 'Das Original! Ein dreibeiniger Hai mit Nike-Sneakers. Der Charakter, der alles begann! Athletische Legende, die mit übermenschlicher Geschwindigkeit rennen und unglaublich hoch springen kann.',
+        descriptionES: '¡El original! Un tiburón de tres patas que usa zapatillas Nike. ¡El personaje que lo comenzó todo! Leyenda atlética que puede correr a velocidades sobrehumanas y saltar increíblemente alto.',
+        image: 'images/01_tralalero_tralala.jpg',
+        color: '#00d4ff',
+        rarity: '⭐⭐⭐⭐⭐'
+    },
+    {
+        letter: 'T',
+        name: 'TUNG TUNG TUNG SAHUR',
+        emoji: '🪵',
+        description: 'En antropomorf træplanke der svinger et baseballbat. Indonesisk oprindelse! "Tung Tung Tung" er lydmaleri af kentungan-trommer under Ramadan.',
+        descriptionEN: 'An anthropomorphic wooden plank swinging a baseball bat. Indonesian origin! "Tung Tung Tung" is onomatopoeia of kentungan drums during Ramadan.',
+        descriptionDE: 'Eine anthropomorphe Holzplanke, die einen Baseballschläger schwingt. Indonesischer Ursprung! "Tung Tung Tung" ist Lautmalerei von Kentungan-Trommeln während des Ramadan.',
+        descriptionES: 'Una tabla de madera antropomórfica que balancea un bate de béisbol. ¡Origen indonesio! "Tung Tung Tung" es onomatopeya de tambores kentungan durante el Ramadán.',
+        image: 'images/02_tung_tung_tung_sahur.webp',
+        color: '#8b4513',
+        rarity: '⭐⭐⭐⭐⭐'
+    },
+    {
+        letter: 'B',
+        name: 'BOMBARDIRO CROCODILO',
+        emoji: '🐊',
+        description: 'En hybrid-skabning med hovedet af en krokodille og kroppen af et WWII bombefly. Centralt symbol for Italian Brainrot. Rent kaos inkarneret!',
+        descriptionEN: 'A hybrid creature with the head of a crocodile and the body of a WWII bomber plane. Central symbol of Italian Brainrot. Pure chaos incarnate!',
+        descriptionDE: 'Eine Hybridkreatur mit dem Kopf eines Krokodils und dem Körper eines WWII-Bombers. Zentrales Symbol von Italian Brainrot. Reines Chaos inkarniert!',
+        descriptionES: 'Una criatura híbrida con cabeza de cocodrilo y cuerpo de bombardero de la Segunda Guerra Mundial. Símbolo central de Italian Brainrot. ¡Caos puro encarnado!',
+        image: 'images/05_bombardiro_crocodilo.jpg',
+        color: '#ff4500',
+        rarity: '⭐⭐⭐⭐⭐'
+    },
+    
+    // ===== HOVEDKARAKTERER (4 STJERNER) =====
+    {
+        letter: 'B',
+        name: 'BALLERINA CAPPUCCINA',
+        emoji: '💃',
+        description: 'En lyserød ballerina med en cappuccino-kop som hoved. Elegant, dramatisk, dybt forelsket i musik. Kone til Cappuccino Assassino!',
+        descriptionEN: 'A pink ballerina with a cappuccino cup as a head. Elegant, dramatic, deeply in love with music. Wife of Cappuccino Assassino!',
+        descriptionDE: 'Eine rosa Ballerina mit einer Cappuccino-Tasse als Kopf. Elegant, dramatisch, tief verliebt in Musik. Ehefrau von Cappuccino Assassino!',
+        descriptionES: 'Una bailarina rosa con una taza de capuchino como cabeza. Elegante, dramática, profundamente enamorada de la música. ¡Esposa de Cappuccino Assassino!',
+        image: 'images/03_ballerina_cappuccina.jpg',
+        color: '#ff69b4',
+        rarity: '⭐⭐⭐⭐'
+    },
+    {
+        letter: 'C',
+        name: 'CAPPUCCINO ASSASSINO',
+        emoji: '☕',
+        description: 'En lejemorder med en cappuccino som hoved og knive som lemmer. Lynhurtig, dødelig, drevet af koffein og hævn! Mand til Ballerina Cappuccina. Hans krop er lavet af skarpe knive der kan skære gennem alt. Når han bevæger sig, efterlader han et spor af dampende kaffe. Hans mission er at beskytte sin elskede ballerina mod alle trusler. Koffeinen giver ham overmenneskelige reflekser og styrke.',
+        descriptionEN: 'An assassin with a cappuccino head and knife limbs. Lightning-fast, deadly, driven by caffeine and revenge! Husband of Ballerina Cappuccina. His body is made of sharp knives that can cut through anything. When he moves, he leaves a trail of steaming coffee. His mission is to protect his beloved ballerina from all threats. Caffeine gives him superhuman reflexes and strength.',
+        descriptionDE: 'Ein Attentäter mit Cappuccino-Kopf und Messer-Gliedmaßen. Blitzschnell, tödlich, angetrieben von Koffein und Rache! Ehemann von Ballerina Cappuccina. Sein Körper besteht aus scharfen Messern, die alles durchschneiden können. Wenn er sich bewegt, hinterlässt er eine Spur aus dampfendem Kaffee. Seine Mission ist es, seine geliebte Ballerina vor allen Bedrohungen zu schützen. Koffein verleiht ihm übermenschliche Reflexe und Kraft.',
+        descriptionES: '¡Un asesino con cabeza de capuchino y extremidades de cuchillo. Rápido como un rayo, mortal, impulsado por cafeína y venganza! Esposo de Ballerina Cappuccina. Su cuerpo está hecho de cuchillos afilados que pueden cortar cualquier cosa. Cuando se mueve, deja un rastro de café humeante. Su misión es proteger a su amada bailarina de todas las amenazas. La cafeína le da reflejos y fuerza sobrehumanos.',
+        image: 'images/06_cappuccino_assassino.webp',
+        color: '#8b0000',
+        rarity: '⭐⭐⭐⭐'
+    },
+    {
+        letter: 'C',
+        name: 'CHIMPANZINI BANANINI',
+        emoji: '🐵',
+        description: 'En chimpanse med en banan som krop. Beskrevet som "uødelæggelig" og betragtet som en af hovedkaraktererne. Den ultimative sidekick! Hans banan-krop giver ham utrolig fleksibilitet og styrke. Han kan ikke besejres i kamp og er altid klar til at hjælpe sine venner. Hans energi kommer fra den perfekte modning af bananen. Elsker at lave sjov og sprede kaos overalt hvor han går.',
+        image: 'images/12_chimpanzini_bananini.png',
+        color: '#ffd700',
+        rarity: '⭐⭐⭐⭐'
+    },
+    {
+        letter: 'B',
+        name: 'BOMBOMBINI GUSINI',
+        emoji: '🦆',
+        description: 'En gås-bomber hybrid (B-29 inspireret), bror til Bombardiro. Bomber for sjov, taler med "z" italiensk accent. Rent kaos! Hans vinger er lavet af metal og kan flyve i supersoniske hastigheder. Når han gåser, slæpper han små bomber der eksploderer i konfetti. Elsker at konkurrere med sin bror om hvem der kan lave mest kaos. Hans italienske accent gør ham endnu mere charmerende og farlig.',
+        image: 'images/17_bombombini_gusini.png',
+        color: '#ff8c00',
+        rarity: '⭐⭐⭐⭐'
+    },
+    {
+        letter: 'B',
+        name: 'BONECA AMBALABU',
+        emoji: '🎎',
+        description: 'En mystisk dukke-karakter med magiske evner. Kendt for sin uhyggelige men fascinerende aura. Hendes porcelæns ansigt skjuler dybe hemmeligheder fra en glemt tid. Hun kan kontrollere andre dukker med sin vilje og skabe illusioner. Når hun synger, fryser tiden omkring hende. Nogle siger hun var engang en rigtig pige der blev forhekset. Hendes øjne lyser i mørket med en uhyggelig grøn glans.',
+        image: 'images/14_boneca_ambalabu.png',
+        color: '#ff1493',
+        rarity: '⭐⭐⭐⭐'
+    },
+    
+    // ===== STØTTEKARAKTERER (3 STJERNER) =====
+    {
+        letter: 'L',
+        name: 'LIRILI LARILA',
+        emoji: '🦩',
+        description: 'En flamingo-karakter med surrealistiske proportioner og livlige farver. Kendt for sit catchy navn og virale dansetrin! Hendes lyserøde fjer skinner som neon i sollyset. Hun kan danse i timevis uden at blive træt. Hendes bevægelser er så hypnotiske at alle der ser hende bliver fanget i trancen. Navnet "Lirili Larila" er blevet et viralt meme på grund af dens rytmiske lyd. Hun er dronningen af dansegulvet i Italian Brainrot universet.',
+        image: 'images/07_lirili_larila.webp',
+        color: '#ff1493',
+        rarity: '⭐⭐⭐'
+    },
+    {
+        letter: 'T',
+        name: 'TRIPPI TROPPI',
+        emoji: '🌴',
+        description: 'En tropisk karakter med psykedeliske farver og surrealistiske proportioner. Bringer paradis-vibes til kaos! Hans hud skifter farve som en kameleon når han bliver ophidset. Lever på en hemmelig ø fyldt med eksotiske frugter og mærkelige skabninger. Hans personlighed er en blanding af chill surf-vibes og eksplosiv energi. Når han løber, efterlader han et spor af tropiske blomster. Hans mission er at sprede paradis-stemning selv i det mest kaotiske kaos.',
+        image: 'images/11_trippi_troppi.webp',
+        color: '#00ff00',
+        rarity: '⭐⭐⭐'
+    },
+    {
+        letter: 'L',
+        name: 'LA VACA SATURNO SATURNITA',
+        emoji: '🐄',
+        description: 'En ko med Saturn-ringe og rumevner. Besidder sort hul-evner og er en top-tier powerhouse! Spreder lykke til børn.',
+        image: 'images/22_la_vacca_saturno_saturnita.webp',
+        color: '#9370db',
+        rarity: '⭐⭐⭐'
+    },
+    {
+        letter: 'F',
+        name: 'FRIGO CAMELO',
+        emoji: '🐫',
+        description: 'Den usandsynlige fusion af et køleskab og en kamel. Udfordrer selve logikken i biologiske former! Fyrer kolde isstråler fra næsen.',
+        image: 'images/23_frigo_camelo.jpg',
+        color: '#4682b4',
+        rarity: '⭐⭐⭐'
+    },
+    {
+        letter: 'B',
+        name: 'BRR BRR PATAPIM',
+        emoji: '🔫',
+        description: 'En karakter med våben-tema og eksplosiv personlighed. Navnet efterligner lyden af skud!',
+        image: 'images/04_brr_brr_patapim.webp',
+        color: '#ff0000',
+        rarity: '⭐⭐⭐'
+    },
+    {
+        letter: 'G',
+        name: 'GARAMA AND MADUNGDUNG',
+        emoji: '🎭',
+        description: 'Et dynamisk duo der bringer dobbelt kaos! To karakterer i ét episk team. Garama er den vilde og impulsive, mens Madungdung er den strategiske hjernen. Sammen kan de løse enhver udfordring med deres perfekte teamwork. Når de kombinerer deres kræfter, sker der magiske ting. Deres venskab er legendarisk i hele Italian Brainrot universet. De kommunikerer næsten telepatisk og ved altid hvad den anden tænker.',
+        image: 'images/08_garama_and_madungdung.jpg',
+        color: '#ffa500',
+        rarity: '⭐⭐⭐'
+    },
+    {
+        letter: 'L',
+        name: 'LOS TRALALERITOS',
+        emoji: '🦈',
+        description: 'De små versioner af Tralalero! En hel familie af tre-benede hajer med Nike sneakers.',
+        image: 'images/09_los_tralaleritos.png',
+        color: '#00bfff',
+        rarity: '⭐⭐⭐'
+    },
+    {
+        letter: 'C',
+        name: 'CHICLETEIRA BICICLETEIRA',
+        emoji: '🚲',
+        description: 'En cykel kombineret med tyggegummi! Kører rundt og efterlader klæbrige spor. Hendes hjul er lavet af gigantiske tyggegummi-bobler der aldrig springer. Når hun cykler, efterlader hun et farverigt spor af klæbrig tyggegummi. Kan cykle op ad vægge og lofter takket være den klæbrige overflade. Hendes kling-klang lyd er blevet et ikon i byen. Elsker at lave tricks og stunts mens hun cykler gennem luften.',
+        image: 'images/10_chicleteira_bicicleteira.png',
+        color: '#ff69b4',
+        rarity: '⭐⭐⭐'
+    },
+    {
+        letter: 'E',
+        name: 'ESOK SEKOLAH',
+        emoji: '🎒',
+        description: 'En skole-temaet karakter der repræsenterer morgendagens lektier og stress! Bærer en tung rygsæk fyldt med uendelige bøger og opgaver. Hans ansigt viser konstant bekymring for deadlines og eksamener. Kan materialisere lektier ud af den blå luft for at plage studerende. Repræsenterer enhver students værste mareridt om at glemme en vigtig opgave. Hans tilstedeværelse får alle til at føle sig skyldige over ikke at have læst nok.',
+        image: 'images/13_esok_sekolah.png',
+        color: '#4169e1',
+        rarity: '⭐⭐⭐'
+    },
+    {
+        letter: 'T',
+        name: 'TRULIMERO TRULICINA',
+        emoji: '🎪',
+        description: 'En cirkus-inspireret karakter med akrobatiske evner og farverige tricks! Kan jonglere med op til 20 objekter samtidig uden at tabe en eneste. Hendes kostume skifter farve som et kalejdoskop. Kan lave triple-backflips mens hun balancerer på en bold. Hendes latter er smittende og får alle til at smile. Bringer cirkus-magi til selv de kedeligste situationer med sin energi og entusiasme.',
+        image: 'images/16_trulimero_trulicina.webp',
+        color: '#ff1493',
+        rarity: '⭐⭐⭐'
+    },
+    {
+        letter: 'U',
+        name: 'U DIN DIN DIN DIN DUN',
+        emoji: '🥁',
+        description: 'En rytmisk karakter hvis navn er ren lydmaleri! Trommer og beats overalt. Hans krop er et levende trommesæt der konstant laver rytmer. Kan skabe musik bare ved at bevæge sig. Hans beats er så catchy at alle begynder at danse uvilkårligt. Navnet "U Din Din Din Din Dun" er blevet et viralt meme på grund af dets perfekte rytme. Han er DJ\'en ved alle de vildeste fester i Italian Brainrot universet.',
+        image: 'images/19_u_din_din_din_din_dun.jpg',
+        color: '#ffd700',
+        rarity: '⭐⭐⭐'
+    },
+    {
+        letter: 'O',
+        name: 'ORCALERO ORCALA',
+        emoji: '🐋',
+        description: 'En spækhugger-variant af Tralalero! Havets mægtigste atlet. Hans sorte og hvide krop skærer gennem vandet som en torpedo. Kan hoppe 30 meter op i luften fra havoverfladen. Hans echolokation kan finde enhver skjult skattekiste i havet. Leder en flok af delfiner og andre havdyr. Hans styrke er legendarisk - kan vælte skibe med et enkelt slag af halen.',
+        image: 'images/20_orcalero_orcala.jpg',
+        color: '#000080',
+        rarity: '⭐⭐⭐'
+    },
+    {
+        letter: 'P',
+        name: 'PAKRAHMATMAMAT',
+        emoji: '👨',
+        description: 'En mystisk menneskelig karakter i Italian Brainrot universet! En af de få mennesker der kan overleve i dette kaotiske univers. Hans visdom og erfaring gør ham til en respekteret figur. Kender hemmeligheder om universets oprindelse som ingen andre ved. Fungerer som mentor for de yngre karakterer. Hans rolige demeanor skjuler utrolige kræfter og evner.',
+        image: 'images/24_pakrahmatmamat.jpg',
+        color: '#8b4513',
+        rarity: '⭐⭐⭐'
+    },
+    
+    // ===== SJÆLDNE KARAKTERER (2 STJERNER) =====
+    {
+        letter: 'P',
+        name: 'POT HOTSPOT',
+        emoji: '📱',
+        description: 'En kombination af skelet, smartphone og Wi-Fi. Græder når hotspot ikke er tilgængeligt. Satiriserer folk der ikke vil betale for data!',
+        image: 'images/15_pot_hotspot.gif',
+        color: '#00ffff',
+        rarity: '⭐⭐'
+    },
+    {
+        letter: 'J',
+        name: 'JOB JOB JOB SAHUR',
+        emoji: '💼',
+        description: 'En arbejds-temaet karakter der repræsenterer stress og deadlines! Bærer en kuffert fyldt med uendelige rapporter og mødeindkaldelser. Hans ur tikker konstant og minder om tabte deadlines. Kan materialisere arbejdsopgaver ud af ingenting. Repræsenterer enhver kontorarbejders værste mareridt. Hans tilstedeværelse får alle til at føle sig stressede og pressede. Aldrig fri, altid på arbejde, evigt træt.',
+        image: 'images/18_job_job_job_sahur.jpg',
+        color: '#696969',
+        rarity: '⭐⭐'
+    },
+    {
+        letter: 'N',
+        name: 'NOOBINI PIZZANINI',
+        emoji: '🍕',
+        description: 'En nybegynder-pizza karakter! Lærer stadig at være en rigtig Italian Brainrot karakter.',
+        image: 'images/21_noobini_pizzanini.webp',
+        color: '#ff6347',
+        rarity: '⭐⭐'
+    },
+    
+    // ===== 100 EKSTRA KARAKTERER =====
+    { letter: 'C', name: 'COCOFANTO ELEFANTO', emoji: '🐘', description: 'En elefant med kokosnød-tema', image: 'images/25_cocofanto_elefanto.jpg', color: '#8b4513', rarity: '⭐⭐⭐' },
+    { letter: 'L', name: 'LAS TRALALERITAS', emoji: '🎭', description: 'Tre søstre der synger i harmoni', image: 'images/26_las_tralaleritas.png', color: '#ff1493', rarity: '⭐⭐⭐' },
+    { letter: 'L', name: 'LA GRANDE COMBINASION', emoji: '🎪', description: 'Den store kombination af kaos', image: 'images/27_la_grande_combinasion.jpg', color: '#ffd700', rarity: '⭐⭐⭐⭐' },
+    { letter: 'B', name: 'BISONTE GIUPPITERE', emoji: '🦬', description: 'En bison med Jupiter-kræfter', image: 'images/28_bisonte_giuppitere.png', color: '#8b4513', rarity: '⭐⭐⭐' },
+    { letter: 'T', name: 'TA TA TA SAHUR', emoji: '🪵', description: 'Søster til Tung Tung Tung', image: 'images/29_ta_ta_ta_sahur.png', color: '#a0522d', rarity: '⭐⭐⭐⭐' },
+    { letter: 'B', name: 'BOBRITO BANDITO', emoji: '🦫', description: 'En bandit-bæver med attitude', image: 'images/30_bobrito_bandito.jpg', color: '#8b4513', rarity: '⭐⭐⭐' },
+    { letter: 'B', name: 'BALLERINO LOLOLO', emoji: '💃', description: 'Mandlig balletdanser med stil', image: 'images/31_ballerino_lololo.gif', color: '#4169e1', rarity: '⭐⭐⭐' },
+    { letter: 'B', name: 'BURBALONI LULILOLI', emoji: '🫧', description: 'Boble-skabning der synger', image: 'images/32_burbaloni_luliloli.png', color: '#87ceeb', rarity: '⭐⭐' },
+    { letter: 'P', name: 'PICCIONE MACCHINA', emoji: '🕊️', description: 'En due der er blevet til maskine', image: 'images/33_piccione_macchina.jpeg', color: '#708090', rarity: '⭐⭐⭐' },
+    { letter: 'S', name: 'SPIJUNIRO GOLUBIRO', emoji: '🕵️', description: 'Spion-due fra Rusland', image: 'images/34_spijuniro_golubiro.png', color: '#2f4f4f', rarity: '⭐⭐⭐' },
+    { letter: 'G', name: 'GLORBO FRUTTODRILLO', emoji: '🍇', description: 'Frugt-drilborskabning', image: 'images/35_glorbo_fruttodrillo.png', color: '#9370db', rarity: '⭐⭐⭐' },
+    { letter: 'B', name: 'BULBITO BANDITO', emoji: '💡', description: 'Bandit-pære der lyser', image: 'images/36_bulbito_bandito.png', color: '#ffff00', rarity: '⭐⭐' },
+    { letter: 'F', name: 'FRULLI FRULLA', emoji: '🌪️', description: 'Tornado af frugt', image: 'images/37_frulli_frulla.webp', color: '#ff6347', rarity: '⭐⭐⭐' },
+    { letter: 'T', name: 'TE TE TE SAHUR', emoji: '🪵', description: 'Endnu en Sahur-søster', image: 'images/38_te_te_te_sahur.png', color: '#a0522d', rarity: '⭐⭐⭐' },
+    { letter: 'T', name: 'TI TI TI SAHUR', emoji: '🪵', description: 'Den yngste Sahur-søster', image: 'images/39_ti_ti_ti_sahur.png', color: '#a0522d', rarity: '⭐⭐⭐' },
+    { letter: 'L', name: 'LOS MATTEOS', emoji: '👨‍👨‍👦', description: 'Tre brødre der laver ballade', image: 'images/40_los_matteos.png', color: '#ff4500', rarity: '⭐⭐⭐' },
+    { letter: 'P', name: 'PIPI KIWI', emoji: '🥝', description: 'En kiwi med toilet-humor', image: 'images/41_pipi_kiwi.jpg', color: '#9acd32', rarity: '⭐⭐' },
+    { letter: 'T', name: 'TIGROLIGRE FRUTONNI', emoji: '🐯', description: 'Tiger med frugt-kræfter', image: 'images/42_tigroligre_frutonni.jpg', color: '#ff8c00', rarity: '⭐⭐⭐⭐' },
+    { letter: 'M', name: 'MASTODONTICO TELEPIEDONE', emoji: '🦣', description: 'Kæmpe mammut med telefon-fødder', image: 'images/43_mastodontico_telepiedone.jpg', color: '#8b4513', rarity: '⭐⭐⭐⭐' },
+    { letter: 'C', name: 'CANNELONI DRAGONI', emoji: '🐉', description: 'Pasta-drage der spyr tomatsauce', image: 'images/44_canneloni_dragoni.webp', color: '#ff0000', rarity: '⭐⭐⭐⭐' },
+    { letter: 'B', name: 'BLUEBERRINNI OCTOPUSSINI', emoji: '🐙', description: 'Blåbær-blæksprutte', image: 'images/45_blueberrinni_octopussini.png', color: '#4169e1', rarity: '⭐⭐⭐' },
+    { letter: 'B', name: 'BRR ES TEH PATIPUM', emoji: '🥶', description: 'Frossen skabning der laver lyde', image: 'images/46_brr_es_teh_patipum.png', color: '#00bfff', rarity: '⭐⭐⭐' },
+    { letter: 'R', name: 'RHINO TOASTERINO', emoji: '🦏', description: 'Næsehorn der er en brødrister', image: 'images/47_rhino_toasterino.jpg', color: '#696969', rarity: '⭐⭐⭐' },
+    { letter: 'T', name: 'TRENOSTRUZZO TURBO 3000', emoji: '🚂', description: 'Struds-tog hybrid i turbo-mode', image: 'images/48_trenostruzzo_turbo_3000.png', color: '#ff4500', rarity: '⭐⭐⭐⭐' },
+    { letter: 'O', name: 'ORANGUTINI ANANASINI', emoji: '🦧', description: 'Orangutang med ananas-hoved', image: 'images/49_orangutini_ananasini.jpg', color: '#ff8c00', rarity: '⭐⭐⭐' },
+    { letter: 'B', name: 'BRI BRI BICUS DICUS', emoji: '🎲', description: 'Terning-skabning der rapper', image: 'images/50_bri_bri_bicus_dicus.png', color: '#ff1493', rarity: '⭐⭐' },
+    { letter: 'G', name: 'GANGSTER FOOTERA', emoji: '⚽', description: 'Gangster-fodbold', image: 'images/51_gangster_footera.jpg', color: '#000000', rarity: '⭐⭐⭐' },
+    { letter: 'L', name: 'LOS ORCALERITOS', emoji: '🐋', description: 'Spækhuggere der synger', image: 'images/52_los_orcaleritos.jpg', color: '#000080', rarity: '⭐⭐⭐' },
+    { letter: 'G', name: 'GIRAFFA CELESTE', emoji: '🦒', description: 'Himmelblå giraf', image: 'images/53_giraffa_celeste.jpg', color: '#87ceeb', rarity: '⭐⭐⭐' },
+    { letter: 'C', name: 'CACASITO SATALITO', emoji: '🛰️', description: 'Satellit med toilet-humor', image: 'images/54_cacasito_satalito.png', color: '#8b4513', rarity: '⭐⭐' },
+    { letter: 'P', name: 'PIPI POTATO', emoji: '🥔', description: 'Kartoffel med toilet-humor', image: 'images/55_pipi_potato.jpeg', color: '#daa520', rarity: '⭐⭐' },
+    { letter: 'C', name: 'CAVALLO VIRTUOSO', emoji: '🐴', description: 'Virtuos hest der spiller violin', image: 'images/56_cavallo_virtuoso.png', color: '#8b4513', rarity: '⭐⭐⭐⭐' },
+    { letter: 'T', name: 'TRIC TRAC BARABUM', emoji: '🥁', description: 'Trommeslager-skabning', image: 'images/57_tric_trac_barabum.webp', color: '#ff4500', rarity: '⭐⭐⭐' },
+    { letter: 'C', name: 'CARROTINI BRAININI', emoji: '🥕', description: 'Gulerod med kæmpe hjerne', image: 'images/58_carrotini_brainini.png', color: '#ff8c00', rarity: '⭐⭐⭐' },
+    { letter: 'T', name: 'TO TO TO SAHUR', emoji: '🪵', description: 'Endnu en Sahur-søster', image: 'images/59_to_to_to_sahur.webp', color: '#a0522d', rarity: '⭐⭐⭐' },
+    { letter: 'C', name: 'CHEF CRABRACADABRA', emoji: '🦀', description: 'Krabbe-kok med magiske evner', image: 'images/60_chef_crabracadabra.png', color: '#ff0000', rarity: '⭐⭐⭐⭐' },
+    { letter: 'T', name: 'TRACTORO DINOSAURO', emoji: '🚜', description: 'Traktor-dinosaur hybrid', image: 'images/61_tractoro_dinosauro.png', color: '#228b22', rarity: '⭐⭐⭐⭐' },
+    { letter: 'I', name: 'IL CACTO HIPOPOTAMO', emoji: '🦛', description: 'Flodhest med kaktus-pigge', image: 'images/62_il_cacto_hipopotamo.png', color: '#228b22', rarity: '⭐⭐⭐' },
+    { letter: 'S', name: 'SVININO BOMBONDINO', emoji: '\ud83d\udc37', description: 'Gris lavet af slik', image: 'images/63_svinino_bombondino.jpg', color: '#ff69b4', rarity: '⭐⭐' },
+    { letter: 'Z', name: 'ZIBRA ZUBRA ZIBRALINI', emoji: '\ud83e\udd93', description: 'Tre zebraer i �n', image: 'images/64_zibra_zubra_zibralini.jpg', color: '#000000', rarity: '⭐⭐⭐' },
+    { letter: 'T', name: 'TRACOTUCOTULU DELAPELADUSTUZ', emoji: '🎪', description: 'Uudsigelig kaos-skabning', image: 'images/63_svinino_bombondino.jpg', color: '#ff1493', rarity: '⭐⭐⭐⭐⭐' },
+    { letter: 'T', name: 'TIGRRULLINI WATERMELLINI', emoji: '🐯', description: 'Tiger med vandmelon-striber', image: 'images/64_zibra_zubra_zibralini.jpg', color: '#ff1493', rarity: '⭐⭐⭐' },
+    { letter: 'P', name: 'PANDACCINI BANANINI', emoji: '🐼', description: 'Panda der elsker bananer', image: 'images/65_tracotucotulu_delapeladustuz.jpg', color: '#000000', rarity: '⭐⭐⭐' },
+    { letter: 'B', name: 'BANANITA DOLFINITA', emoji: '🐬', description: 'Banan-delfin hybrid', image: 'images/66_tigrrullini_watermellini.jpg', color: '#ffff00', rarity: '⭐⭐⭐' },
+    { letter: 'P', name: 'PEROCHELLO LEMONCHELLO', emoji: '🍋', description: 'Pære-citron duo', image: 'images/67_pandaccini_bananini.png', color: '#ffff00', rarity: '⭐⭐' },
+    { letter: 'T', name: 'TALPA DI FERRO', emoji: '🦡', description: 'Jern-muldvarp', image: 'images/68_bananita_dolfinita.jpg', color: '#696969', rarity: '⭐⭐⭐' },
+    { letter: 'S', name: 'SALAMINO PENGUINO', emoji: '🐧', description: 'Salami-pingvin', image: 'images/69_perochello_lemonchello.jpg', color: '#ff0000', rarity: '⭐⭐⭐' },
+    { letter: 'G', name: 'GORILLO WATERMELLONDRILLO', emoji: '🦍', description: 'Gorilla med vandmelon-drill', image: 'images/70_talpa_di_ferro.png', color: '#228b22', rarity: '⭐⭐⭐⭐' },
+    { letter: 'T', name: 'TU TU TU SAHUR', emoji: '🪵', description: 'Endnu en Sahur-søster', image: 'images/71_salamino_penguino.jpg', color: '#a0522d', rarity: '⭐⭐⭐' },
+    { letter: 'A', name: 'AVOCADINI GUFFO', emoji: '🦉', description: 'Avocado-ugle', image: 'images/72_gorillo_watermellondrillo.png', color: '#228b22', rarity: '⭐⭐⭐' },
+    { letter: 'T', name: 'TORRTUGINNI DRAGONFRUTINNI', emoji: '🐢', description: 'Skildpadde med dragefrugt-skal', image: 'images/73_tu_tu_tu_sahur.jpg', color: '#ff1493', rarity: '⭐⭐⭐' },
+    { letter: 'P', name: 'PENGUINELLI CACTUSSINI', emoji: '🐧', description: 'Pingvin med kaktus-fjer', image: 'images/74_avocadini_guffo.png', color: '#228b22', rarity: '⭐⭐⭐' },
+    { letter: 'B', name: 'BAMBINI CROSTINI', emoji: '🍞', description: 'Brød-børn', image: 'images/75_torrtuginni_dragonfrutinni.jpg', color: '#daa520', rarity: '⭐⭐' },
+    { letter: 'A', name: 'AVOCADINI ANTILOPINI', emoji: '🦌', description: 'Avocado-antilope', image: 'images/76_penguinelli_cactussini.png', color: '#228b22', rarity: '⭐⭐⭐' },
+    { letter: 'L', name: 'LEONELLI CACTUSELLI', emoji: '🦁', description: 'Løve med kaktus-manke', image: 'images/77_bambini_crostini.png', color: '#228b22', rarity: '⭐⭐⭐⭐' },
+    { letter: 'O', name: 'OKTOPUS MIT DEM AUTOBUS', emoji: '🐙', description: 'Blæksprutte med bus', image: 'images/78_avocadini_antilopini.png', color: '#ff8c00', rarity: '⭐⭐⭐' },
+    { letter: 'Q', name: 'QUIVIOLI AMELEONNI', emoji: '🦎', description: 'Kiwi-kamæleon', image: 'images/79_leonelli_cactuselli.jpg', color: '#9acd32', rarity: '⭐⭐⭐' },
+    { letter: 'S', name: 'STRAWBERRELLI FLAMINGELLI', emoji: '🦩', description: 'Jordbær-flamingo', image: 'images/80_oktopus_mit_dem_autobus.jpg', color: '#ff1493', rarity: '⭐⭐⭐' },
+    { letter: 'F', name: 'FERRO FERRO FERRO SAHUR', emoji: '🪵', description: 'Jern-version af Sahur', image: 'images/81_quivioli_ameleonni.png', color: '#696969', rarity: '⭐⭐⭐⭐' },
+    { letter: 'G', name: 'GRAIPUSSI MEDUSSI', emoji: '🪼', description: 'Drue-gople', image: 'images/82_strawberrelli_flamingelli.png', color: '#9370db', rarity: '⭐⭐' },
+    { letter: 'E', name: 'ESPRESSONA SIGNORA', emoji: '☕', description: 'Elegant espresso-dame', image: 'images/83_ferro_ferro_ferro_sahur.jpg', color: '#8b4513', rarity: '⭐⭐⭐⭐' },
+    { letter: 'S', name: 'SPAGHETTI TUALETTI', emoji: '🍝', description: 'Spaghetti-toilet', image: 'images/84_graipussi_medussi.jpg', color: '#ff8c00', rarity: '⭐⭐' },
+    { letter: 'C', name: 'CAPPUCCINO BABOOINO', emoji: '🐵', description: 'Cappuccino-bavian', image: 'images/85_espressona_signora.webp', color: '#8b4513', rarity: '⭐⭐⭐' },
+    { letter: 'R', name: 'RACCOONI WATERMELUNNI', emoji: '🦝', description: 'Vaskebjørn med vandmelon', image: 'images/86_spaghetti_tualetti.png', color: '#ff1493', rarity: '⭐⭐⭐' },
+    { letter: 'S', name: 'SNOOFFI ZEFFIRULLI', emoji: '🐕', description: 'Hund med zefir-pels', image: 'images/87_cappuccino_babooino.png', color: '#ffffff', rarity: '⭐⭐⭐' },
+    { letter: 'C', name: 'COCOSSINI MAMA', emoji: '🥥', description: 'Kokosnød-mor', image: 'images/88_raccooni_watermelunni.jpg', color: '#8b4513', rarity: '⭐⭐⭐' },
+    { letter: 'M', name: 'MOTOSAHUR', emoji: '🏍️', description: 'Motorcykel-Sahur', image: 'images/89_snooffi_zeffirulli.webp', color: '#ff0000', rarity: '⭐⭐⭐⭐' },
+    { letter: 'I', name: 'IL PICCIONE MUSCULONE', emoji: '🕊️', description: 'Muskuløs due', image: 'images/90_cocossini_mama.jpg', color: '#696969', rarity: '⭐⭐⭐' },
+    { letter: 'G', name: 'GRANCHIELLO SPIRITELLO', emoji: '🦀', description: 'Spøgelses-krabbe', image: 'images/91_motosahur.jpg', color: '#ffffff', rarity: '⭐⭐⭐' },
+    { letter: 'C', name: 'CIOCCOLATINI PANCIONCIONI', emoji: '🍫', description: 'Tyk chokolade-skabning', image: 'images/92_il_piccione_musculone.jpg', color: '#8b4513', rarity: '⭐⭐' },
+    { letter: 'T', name: 'TARARI TARARA', emoji: '🎺', description: 'Trompet-skabning', image: 'images/93_granchiello_spiritello.png', color: '#ffd700', rarity: '⭐⭐⭐' },
+    { letter: 'P', name: 'PUTTANA LA BANANA', emoji: '🍌', description: 'Kontroversiel banan', image: 'images/94_cioccolatini_pancioncioni.jpg', color: '#ffff00', rarity: '⭐⭐⭐⭐' },
+    { letter: 'E', name: 'ELEFANTUCCI STRAWBERRUCCI', emoji: '🐘', description: 'Jordbær-elefant', image: 'images/95_tarari_tarara.jpg', color: '#ff1493', rarity: '⭐⭐⭐' },
+    { letter: 'L', name: 'LEOPARDUCCI GRAPEFRUITUCCI', emoji: '🐆', description: 'Grapefrugt-leopard', image: 'images/96_puttana_la_banana.jpg', color: '#ff8c00', rarity: '⭐⭐⭐' },
+    { letter: 'P', name: 'PAPERO ASPIRATORINO', emoji: '🦆', description: 'And-støvsuger', image: 'images/97_elefantucci_strawberrucci.jpg', color: '#ffff00', rarity: '⭐⭐⭐' },
+    { letter: 'E', name: 'ELEFANTINO FRIGORIFERO', emoji: '🐘', description: 'Elefant-køleskab', image: 'images/98_leoparducci_grapefruitucci.png', color: '#ffffff', rarity: '⭐⭐⭐' },
+    { letter: 'H', name: 'HIPOPOTAMINO SUPERMARKETINO', emoji: '🦛', description: 'Flodhest-supermarked', image: 'images/99_papero_aspiratorino.png', color: '#696969', rarity: '⭐⭐⭐' },
+    { letter: 'F', name: 'FRUGINO FRULLATORINO', emoji: '🍹', description: 'Frugt-blender', image: 'images/100_elefantino_frigorifero.webp', color: '#ff1493', rarity: '⭐⭐⭐' },
+    { letter: 'C', name: 'CIUF CIUF TRENO PERVERTITO', emoji: '🚂', description: 'Perverteret tog', image: 'images/101_hipopotamino_supermarketino.png', color: '#ff0000', rarity: '⭐⭐⭐⭐' },
+    { letter: 'R', name: 'RASPBERRINI RABBITINI', emoji: '🐰', description: 'Hindbær-kanin', image: 'images/102_frugino_frullatorino.jpg', color: '#ff1493', rarity: '⭐⭐⭐' },
+    { letter: 'P', name: 'PEACHI FOXILINI', emoji: '🦊', description: 'Fersken-ræv', image: 'images/103_ciuf_ciuf_treno_pervertito.jpg', color: '#ff8c00', rarity: '⭐⭐⭐' },
+    { letter: 'T', name: 'TIRILIKALIKA TIRILIKALAKO', emoji: '🎵', description: 'Musikalsk kaos-skabning', image: 'images/104_raspberrini_rabbitini.jpg', color: '#ff1493', rarity: '⭐⭐⭐' },
+    { letter: 'G', name: 'GINGOBALO GINGOBALI', emoji: '🎪', description: 'Cirkus-duo', image: 'images/105_peachi_foxilini.webp', color: '#ffd700', rarity: '⭐⭐⭐' },
+    { letter: 'P', name: 'PUSSINI SUSHINI', emoji: '🍣', description: 'Kat-sushi', image: 'images/106_tirilikalika_tirilikalako.png', color: '#ff8c00', rarity: '⭐⭐⭐' },
+    { letter: 'M', name: 'MANGOLINI PARROCINI', emoji: '🦜', description: 'Mango-papegøje', image: 'images/107_gingobalo_gingobali.jpg', color: '#ff8c00', rarity: '⭐⭐⭐' },
+    { letter: 'F', name: 'FLAMINGULLI GULLI GULLI', emoji: '🦩', description: 'Tre flamingo-søstre', image: 'images/108_pussini_sushini.webp', color: '#ff1493', rarity: '⭐⭐⭐' },
+    { letter: 'C', name: 'CAPYBARELLI BANANALELLI', emoji: '🦫', description: 'Banan-capybara', image: 'images/109_mangolini_parrocini.jpg', color: '#ffff00', rarity: '⭐⭐⭐' },
+    { letter: 'K', name: 'KIWITTO BANDITTO', emoji: '🥝', description: 'Kiwi-bandit', image: 'images/110_flamingulli_gulli_gulli.jpg', color: '#9acd32', rarity: '⭐⭐⭐' },
+    { letter: 'C', name: 'CRABITO COCOSITO', emoji: '🦀', description: 'Kokosnød-krabbe', image: 'images/111_capybarelli_bananalelli.jpg', color: '#8b4513', rarity: '⭐⭐⭐' },
+    { letter: 'B', name: 'BRINDOLERO BRINDOLINA', emoji: '🎭', description: 'Skål-duo', image: 'images/112_kiwitto_banditto.jpg', color: '#ffd700', rarity: '⭐⭐' },
+    { letter: 'B', name: 'BLUEBERRINI TATTICINI', emoji: '🐧', description: 'Blåbær-pingvin', image: 'images/113_crabito_cocosito.jpg', color: '#4169e1', rarity: '⭐⭐⭐' },
+    { letter: 'C', name: 'CATINI STRAWBERINI', emoji: '🐱', description: 'Jordbær-kat', image: 'images/114_brindolero_brindolina.jpeg', color: '#ff1493', rarity: '⭐⭐⭐' },
+    { letter: 'G', name: 'GIRAFFA MELONIERA', emoji: '🦒', description: 'Melon-giraf', image: 'images/115_blueberrini_tatticini.jpg', color: '#ff1493', rarity: '⭐⭐⭐' },
+    { letter: 'C', name: 'CATINI STRAWBERINI', emoji: '🐱', description: 'Kat med jordbær', image: 'images/116_catini_strawberini.jpeg', color: '#ff69b4', rarity: '⭐⭐⭐' },
+    { letter: 'G', name: 'GIRAFFA MELONIERA', emoji: '🦒', description: 'Giraf med melon', image: 'images/117_giraffa_meloniera.png', color: '#ffa500', rarity: '⭐⭐⭐⭐' },
+    { letter: 'P', name: 'PIPPI POPPA PIPPO PEPPE', emoji: '🎪', description: 'Fire kaotiske brødre', image: 'images/118_pippi_poppa_pippo_peppe.jpeg', color: '#ff4500', rarity: '⭐⭐⭐⭐' },
+    { letter: 'P', name: 'PIPI STRAWBERRY', emoji: '🍓', description: 'Jordbær med toilet-humor', image: 'images/119_pipi_strawberry.webp', color: '#ff1493', rarity: '⭐⭐' },
+    { letter: 'K', name: 'KUDANILE ASTRONOTE', emoji: '🐊', description: 'Astronaut-krokodille', image: 'images/120_kudanile_astronote.jpg', color: '#228b22', rarity: '⭐⭐⭐⭐' },
+    { letter: 'C', name: 'CHAI MAESTRO', emoji: '🍵', description: 'Te-mester', image: 'images/121_chai_maestro.jpg', color: '#8b4513', rarity: '⭐⭐⭐' },
+    { letter: 'S', name: 'SIGMA BOY', emoji: '😎', description: 'Den ultimative sigma', image: 'images/122_sigma_boy.jpg', color: '#000000', rarity: '⭐⭐⭐⭐⭐' },
+    { letter: 'D', name: 'DINOSAHURUS', emoji: '🦕', description: 'Sahur-dinosaur', image: 'images/123_dinosahurus.png', color: '#228b22', rarity: '⭐⭐⭐⭐' },
+    { letter: 'C', name: 'COCOCORINA BALLERINA', emoji: '🥥', description: 'Kokosnød-ballerina', image: 'images/124_cococorina_ballerina.jpeg', color: '#8b4513', rarity: '⭐⭐⭐' }
+];
+
+console.log('🎭 Italian Brainrot Karakterer Indlæst:', window.italianBrainrotCharacters.length);
+

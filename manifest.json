@@ -1,0 +1,33 @@
+{
+  "name": "Italian Brainrot A-Z",
+  "short_name": "Brainrot",
+  "description": "The ultimate Italian Brainrot character encyclopedia with crazy games!",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a0015",
+  "theme_color": "#ff10f0",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "images/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "images/brainrot_icon_v2.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["entertainment", "games", "education"],
+  "lang": "en",
+  "dir": "ltr",
+  "scope": "./",
+  "prefer_related_applications": false
+}

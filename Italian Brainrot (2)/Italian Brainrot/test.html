@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Characters.js</title>
+</head>
+<body>
+    <h1>Test Characters.js Loading</h1>
+    <div id="result"></div>
+    
+    <script src="characters.js"></script>
+    <script>
+        var result = document.getElementById('result');
+        if (window.italianBrainrotCharacters) {
+            result.innerHTML = '<p style="color:green">✅ LOADED! ' + window.italianBrainrotCharacters.length + ' karakterer</p>';
+            console.log('✅ Characters loaded:', window.italianBrainrotCharacters.length);
+            console.log('Første karakter:', window.italianBrainrotCharacters[0]);
+        } else {
+            result.innerHTML = '<p style="color:red">❌ IKKE LOADED!</p>';
+            console.error('❌ window.italianBrainrotCharacters er undefined');
+        }
+    </script>
+</body>
+</html>

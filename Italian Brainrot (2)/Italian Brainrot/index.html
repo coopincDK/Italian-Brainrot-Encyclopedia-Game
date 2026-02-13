@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎭 ITALIAN BRAINROT A-Z 🇮🇹</title>
+    <link rel="stylesheet" href="style.css?v=20260212214652">
+    <meta name="description" content="Det ultimative Italian Brainrot karakter leksikon! Udforsk vanvittige AI-genererede karakterer med vilde 3D effekter!">
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="language-selector">
+            <button class="lang-btn" onclick="changeLanguage('en')" data-lang="en">🇬🇧 EN</button>
+            <button class="lang-btn" onclick="changeLanguage('de')" data-lang="de">🇩🇪 DE</button>
+            <button class="lang-btn" onclick="changeLanguage('es')" data-lang="es">🇪🇸 ES</button>
+            <button class="lang-btn" onclick="changeLanguage('da')" data-lang="da">🇩🇰 DA</button>
+        </div>
+        <h1>🎭 ITALIAN BRAINROT 🇮🇹</h1>
+        <p class="subtitle">THE ULTIMATE A-Z CHARACTER ENCYCLOPEDIA</p>
+    </header>
+
+    <!-- ALPHABET NAVIGATION -->
+    <nav class="alphabet-nav">
+        <button class="letter-btn active" onclick="filterByLetter('ALL', this)">ALLE</button>
+        <button class="letter-btn" onclick="filterByLetter('A', this)">A</button>
+        <button class="letter-btn" onclick="filterByLetter('B', this)">B</button>
+        <button class="letter-btn" onclick="filterByLetter('C', this)">C</button>
+        <button class="letter-btn" onclick="filterByLetter('D', this)">D</button>
+        <button class="letter-btn" onclick="filterByLetter('E', this)">E</button>
+        <button class="letter-btn" onclick="filterByLetter('F', this)">F</button>
+        <button class="letter-btn" onclick="filterByLetter('G', this)">G</button>
+        <button class="letter-btn" onclick="filterByLetter('H', this)">H</button>
+        <button class="letter-btn" onclick="filterByLetter('I', this)">I</button>
+        <button class="letter-btn" onclick="filterByLetter('J', this)">J</button>
+        <button class="letter-btn" onclick="filterByLetter('K', this)">K</button>
+        <button class="letter-btn" onclick="filterByLetter('L', this)">L</button>
+        <button class="letter-btn" onclick="filterByLetter('M', this)">M</button>
+        <button class="letter-btn" onclick="filterByLetter('N', this)">N</button>
+        <button class="letter-btn" onclick="filterByLetter('O', this)">O</button>
+        <button class="letter-btn" onclick="filterByLetter('P', this)">P</button>
+        <button class="letter-btn" onclick="filterByLetter('Q', this)">Q</button>
+        <button class="letter-btn" onclick="filterByLetter('R', this)">R</button>
+        <button class="letter-btn" onclick="filterByLetter('S', this)">S</button>
+        <button class="letter-btn" onclick="filterByLetter('T', this)">T</button>
+        <button class="letter-btn" onclick="filterByLetter('U', this)">U</button>
+        <button class="letter-btn" onclick="filterByLetter('V', this)">V</button>
+        <button class="letter-btn" onclick="filterByLetter('W', this)">W</button>
+        <button class="letter-btn" onclick="filterByLetter('X', this)">X</button>
+        <button class="letter-btn" onclick="filterByLetter('Y', this)">Y</button>
+        <button class="letter-btn" onclick="filterByLetter('Z', this)">Z</button>
+        <button id="game-start-btn" class="game-btn" onclick="showGameModeSelection()">🎮 SPIL</button>
+        <button id="game-end-btn" class="game-btn" onclick="endGame()" style="display:none;">❌ STOP SPIL</button>
+    </nav>
+    
+    <!-- GAME MODE SELECTION -->
+    <div id="game-mode-selection" class="mode-selection-overlay" style="display:none;">
+        <div class="mode-selection-container">
+            <h2 class="mode-selection-title">🎮 VÆLG SPIL MODE 🎮</h2>
+            <p class="mode-selection-subtitle">Hvor modig er du?</p>
+            
+            <div class="mode-options">
+                <!-- KYLLING MODE -->
+                <div class="mode-option" onclick="selectGameMode('chicken')">
+                    <div class="mode-icon">🐔</div>
+                    <div class="mode-name">KYLLING</div>
+                    <div class="mode-description">
+                        • Normal sværhedsgrad<br>
+                        • 1x point<br>
+                        • Rolig og stabil<br>
+                        • For begyndere
+                    </div>
+                    <div class="mode-bonus">Standard Point</div>
+                </div>
+                
+                <!-- KAOS MODE -->
+                <div class="mode-option mode-chaos" onclick="selectGameMode('chaos')">
+                    <div class="mode-icon">🔥</div>
+                    <div class="mode-name">KAOS</div>
+                    <div class="mode-description">
+                        • VANVITTIG sværhedsgrad<br>
+                        • <strong>Kun 3 liv!</strong><br>
+                        • Siden roterer og flipper<br>
+                        • Byg lange streaks!<br>
+                        • For de modige!
+                    </div>
+                    <div class="mode-bonus">🔥 PROGRESSIV KAOS! 🔥</div>
+                </div>
+            </div>
+            
+            <!-- HIGHSCORE LISTE I MODE SELECTION -->
+            <div id="mode-highscore-list" style="margin-top:30px;">
+                <h3 style="color:var(--neon-pink); text-align:center; margin-bottom:15px;">🏆 TOP 3 HIGHSCORES 🏆</h3>
+                <div id="mode-highscore-display"></div>
+            </div>
+            
+            <button class="mode-cancel" onclick="document.getElementById('game-mode-selection').style.display='none'">❌ ANNULLER</button>
+        </div>
+    </div>
+    
+    <!-- SPIL CONTAINER -->
+    <div id="game-container" style="display:none;">
+        <div class="game-header">
+            <div class="game-stat">
+                <span class="game-stat-label">SCORE:</span>
+                <span id="game-score" class="game-stat-value">0</span>
+            </div>
+            <div class="game-stat">
+                <span class="game-stat-label">SPØRGSMÅL:</span>
+                <span id="game-questions" class="game-stat-value">0</span>
+            </div>
+            <div class="game-stat">
+                <span class="game-stat-label">TOTAL TID:</span>
+                <span id="game-total-timer" class="game-stat-value">60</span>
+            </div>
+            <div class="game-stat">
+                <span class="game-stat-label">SPØRGSMÅL TID:</span>
+                <span id="game-question-timer" class="game-stat-value">10</span>
+            </div>
+            <div class="game-stat">
+                <span class="game-stat-label">LIV:</span>
+                <span id="game-lives" class="game-stat-value">❤️❤️❤️❤️❤️</span>
+            </div>
+            <div class="game-stat" id="combo-stat" style="display:none;">
+                <span class="game-stat-label">STREAK:</span>
+                <span id="game-combo" class="game-stat-value">x1</span>
+            </div>
+        </div>
+        
+        <div class="game-question">
+            <h2>HVEM ER DENNE KARAKTER?</h2>
+            <img id="game-character-image" class="game-character-img" src="" alt="Gæt karakteren">
+        </div>
+        
+        <div id="game-options" class="game-options"></div>
+        
+        <div id="game-feedback" class="game-feedback" style="display:none;"></div>
+        
+        <!-- KAOS MODE INDIKATOR -->
+        <div id="chaos-mode-indicator" class="chaos-mode-indicator" style="display:none;">
+            🔥 KAOS MODE AKTIV! 🔥
+        </div>
+        
+        <!-- KAOS METER -->
+        <div id="chaos-meter" class="chaos-meter" style="display:none;">
+            <div class="chaos-label">🔥 KAOS NIVEAU 🔥</div>
+            <div class="chaos-bar">
+                <div id="chaos-fill" class="chaos-fill"></div>
+            </div>
+            <div class="chaos-text" id="chaos-text">0%</div>
+            <div class="chaos-warning" id="chaos-warning" style="display:none;">
+                🔥 KAOSET ØGER AUTOMATISK UNDER SPILLET!
+            </div>
+        </div>
+    </div>
+    
+    <!-- HIGHSCORE ENTRY -->
+    <div id="highscore-entry" style="display:none;">
+        <div class="highscore-entry-box">
+            <h2>🏆 NY HIGHSCORE! 🏆</h2>
+            <p id="game-over-reason" style="font-size:1.8rem; color:#ff0000; margin-bottom:20px;"></p>
+            <p class="highscore-stats">
+                Score: <span id="final-score-display">0</span> point<br>
+                Spørgsmål: <span id="final-questions-display">0</span>
+            </p>
+            <input type="text" id="player-name-input" placeholder="Indtast dit navn" maxlength="20">
+            <button class="submit-highscore-btn" onclick="submitHighscore()">GEM HIGHSCORE</button>
+            
+            <!-- HIGHSCORE LISTE -->
+            <div id="highscore-container" style="display:none; margin-top:30px;">
+                <h2 class="highscore-title">🏆 TOP 3 HIGHSCORES 🏆</h2>
+                <div id="highscore-list"></div>
+                <button class="game-btn" onclick="location.reload()" style="margin-top:20px;">🔄 PRØV IGEN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHARACTERS CONTAINER -->
+    <div class="characters-container">
+        <div id="characters-grid" class="characters-grid">
+            <div class="loading">INDLÆSER BRAINROT... 🧠</div>
+        </div>
+    </div>
+
+    <!-- CHARACTER MODAL -->
+    <div id="character-modal" class="character-modal" style="display:none;" onclick="closeCharacterModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation();">
+            <button class="modal-close" onclick="closeCharacterModal()">×</button>
+            <div class="modal-body">
+                <div class="modal-image-wrapper">
+                    <img id="modal-image" src="" alt="">
+                </div>
+                <div class="modal-info">
+                    <div id="modal-emoji" class="modal-emoji"></div>
+                    <h2 id="modal-name" class="modal-name"></h2>
+                    <div id="modal-rarity" class="modal-rarity"></div>
+                    <p id="modal-description" class="modal-description"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-scroll">
+            🎭 TRALALERO TRALALA 🦈 BOMBARDIRO CROCODILO 🐊 TUNG TUNG TUNG SAHUR 🪵 CAPPUCCINO ASSASSINO ☕ BALLERINA CAPPUCCINA 💃 CHIMPANZINI BANANINI 🐵 BOMBOMBINI GUSINI 🦆 CASTORI GANGSTERI 🦫 ITALIAN BRAINROT FOREVER! 🇮🇹
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="translations.js?v=20260212215339"></script>
+    <script src="characters.js?v=20260212214953"></script>
+    <script src="script.js?v=20260212214953"></script>
+    <script src="game.js?v=20260212215339"></script>
+</body>
+</html>
