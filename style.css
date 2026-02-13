@@ -3747,22 +3747,47 @@ footer {
         font-size: 0.85rem;
     }
     
-    .lifeline-btn {
-        padding: 8px 10px;
-        min-width: 60px;
+    /* Lifelines - 2x2 grid på mobil */
+    .jeopardy-lifelines,
+    .meltdown-lifelines {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        width: 100%;
+        padding: 0 10px;
+    }
+    
+    .lifeline-btn,
+    .meltdown-lifeline {
+        padding: 10px 8px;
+        min-width: unset;
+        width: 100%;
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .lifeline-icon {
+        font-size: 1.5rem;
     }
     
     .lifeline-text {
-        display: none;
+        display: block !important;
+        font-size: 0.65rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
     }
     
     .meltdown-timer {
-        flex-direction: column;
-        gap: 5px;
+        flex-direction: row;
+        gap: 10px;
+        padding: 8px 15px;
     }
     
     .timer-text {
         font-size: 1.2rem;
+        min-width: 60px;
     }
     
     .meltdown-content h1 {
@@ -3771,5 +3796,16 @@ footer {
     
     .meltdown-brain {
         font-size: 3rem;
+    }
+}
+
+/* Endnu mindre skærme */
+@media (max-width: 400px) {
+    .lifeline-text {
+        font-size: 0.55rem;
+    }
+    
+    .lifeline-icon {
+        font-size: 1.3rem;
     }
 }

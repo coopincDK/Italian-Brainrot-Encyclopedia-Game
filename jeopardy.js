@@ -299,9 +299,12 @@ function startJeopardy() {
     
     document.getElementById('game-mode-selection').style.display = 'none';
     
-    showMeltdownUI();
+    showJeopardyUI();
     showQuestion();
 }
+
+// Alias for backward compatibility
+function showMeltdownUI() { showJeopardyUI(); }
 
 function showJeopardyUI() {
     const existing = document.getElementById('jeopardy-container');
