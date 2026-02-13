@@ -2613,3 +2613,575 @@ footer {
 .flappy-bird.flapping {
     animation: flap 0.2s ease-out;
 }
+
+/* ============================================
+   BRAINROT JEOPARDY STYLES
+   ============================================ */
+
+.jeopardy-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.jeopardy-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+}
+
+.jeopardy-game {
+    position: relative;
+    width: 95%;
+    max-width: 900px;
+    max-height: 95vh;
+    background: linear-gradient(135deg, #1a0a2e 0%, #16213e 50%, #0f0f23 100%);
+    border: 3px solid var(--neon-pink);
+    border-radius: 20px;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: 
+        0 0 30px var(--neon-pink),
+        inset 0 0 30px rgba(255, 16, 240, 0.1);
+}
+
+.jeopardy-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 0, 0, 0.3);
+    border: 2px solid #ff4444;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    color: #ff4444;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s;
+}
+
+.jeopardy-close:hover {
+    background: #ff4444;
+    color: white;
+    transform: scale(1.1);
+}
+
+.jeopardy-header {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.jeopardy-header h1 {
+    font-family: 'Bangers', cursive;
+    font-size: 2rem;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 20px var(--neon-cyan);
+    margin-bottom: 10px;
+}
+
+.jeopardy-progress {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Bangers', cursive;
+    font-size: 1.2rem;
+    color: var(--neon-yellow);
+}
+
+/* Lifelines */
+.jeopardy-lifelines {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.lifeline-btn {
+    background: linear-gradient(135deg, #2a1a4a 0%, #1a0a3a 100%);
+    border: 2px solid var(--neon-cyan);
+    border-radius: 10px;
+    padding: 10px 15px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    min-width: 80px;
+}
+
+.lifeline-btn:hover:not(.used):not(:disabled) {
+    background: linear-gradient(135deg, #3a2a5a 0%, #2a1a4a 100%);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px var(--neon-cyan);
+}
+
+.lifeline-btn.used {
+    opacity: 0.3;
+    border-color: #666;
+    cursor: not-allowed;
+}
+
+.lifeline-icon {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.lifeline-text {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+}
+
+/* Question Area */
+.jeopardy-question-area {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.jeopardy-image {
+    margin-bottom: 15px;
+}
+
+.jeopardy-char-img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 15px;
+    border: 3px solid var(--neon-pink);
+    box-shadow: 0 0 20px var(--neon-pink);
+}
+
+.jeopardy-question {
+    font-family: 'Bangers', cursive;
+    font-size: 1.4rem;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 15px 20px;
+    border-radius: 10px;
+    border: 2px solid var(--neon-yellow);
+}
+
+/* Answers */
+.jeopardy-answers {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.jeopardy-answer {
+    background: linear-gradient(135deg, #1a3a5c 0%, #0a1a2c 100%);
+    border: 2px solid #4a9eff;
+    border-radius: 10px;
+    padding: 15px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+}
+
+.jeopardy-answer:hover:not(.eliminated):not(.locked) {
+    background: linear-gradient(135deg, #2a4a6c 0%, #1a2a3c 100%);
+    transform: scale(1.02);
+    box-shadow: 0 0 15px #4a9eff;
+}
+
+.jeopardy-answer.selected {
+    border-color: var(--neon-yellow);
+    box-shadow: 0 0 20px var(--neon-yellow);
+}
+
+.jeopardy-answer.locked {
+    animation: pulse-orange 0.5s infinite;
+}
+
+.jeopardy-answer.correct {
+    background: linear-gradient(135deg, #1a5c1a 0%, #0a2c0a 100%) !important;
+    border-color: #00ff00 !important;
+    box-shadow: 0 0 30px #00ff00 !important;
+    animation: none;
+}
+
+.jeopardy-answer.wrong {
+    background: linear-gradient(135deg, #5c1a1a 0%, #2c0a0a 100%) !important;
+    border-color: #ff0000 !important;
+    box-shadow: 0 0 30px #ff0000 !important;
+    animation: none;
+}
+
+.jeopardy-answer.eliminated {
+    opacity: 0.2;
+    cursor: not-allowed;
+    transform: scale(0.95);
+}
+
+@keyframes pulse-orange {
+    0%, 100% { box-shadow: 0 0 10px orange; }
+    50% { box-shadow: 0 0 30px orange; }
+}
+
+.answer-letter {
+    background: var(--neon-cyan);
+    color: black;
+    font-weight: bold;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.answer-text {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 0.95rem;
+}
+
+/* Lock Button */
+.jeopardy-actions {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.jeopardy-lock-btn {
+    background: linear-gradient(135deg, #ff6600 0%, #cc3300 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 15px 40px;
+    font-family: 'Bangers', cursive;
+    font-size: 1.3rem;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.jeopardy-lock-btn:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px #ff6600;
+}
+
+.jeopardy-lock-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Prize Ladder */
+.jeopardy-prize-ladder {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.ladder-title {
+    text-align: center;
+    font-family: 'Bangers', cursive;
+    color: var(--neon-yellow);
+    margin-bottom: 10px;
+}
+
+.ladder-step {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-bottom: 3px;
+    font-family: 'Bangers', cursive;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+.ladder-step.safe {
+    background: rgba(255, 215, 0, 0.2);
+    border: 1px solid gold;
+}
+
+.ladder-step.current {
+    background: var(--neon-pink);
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px var(--neon-pink);
+}
+
+.ladder-step.passed {
+    opacity: 0.4;
+}
+
+/* Lifeline Popups */
+.lifeline-popup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.lifeline-popup-content {
+    background: linear-gradient(135deg, #1a0a2e 0%, #2a1a4e 100%);
+    border: 3px solid var(--neon-cyan);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    max-width: 400px;
+    animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.lifeline-popup-content h2 {
+    font-family: 'Bangers', cursive;
+    color: var(--neon-cyan);
+    margin-bottom: 20px;
+}
+
+.lifeline-popup-content button {
+    background: var(--neon-pink);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 30px;
+    font-family: 'Bangers', cursive;
+    font-size: 1.1rem;
+    color: white;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+/* Audience Bars */
+.audience-bars {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    height: 150px;
+    align-items: flex-end;
+    margin: 20px 0;
+}
+
+.audience-bar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50px;
+}
+
+.audience-bar {
+    width: 40px;
+    background: linear-gradient(to top, var(--neon-cyan), var(--neon-pink));
+    border-radius: 5px 5px 0 0;
+    transition: height 1s ease-out;
+}
+
+.audience-percent {
+    font-family: 'Bangers', cursive;
+    color: var(--neon-yellow);
+    margin-top: 5px;
+}
+
+.audience-letter {
+    font-family: 'Bangers', cursive;
+    font-size: 1.2rem;
+    color: white;
+}
+
+/* Phone Call */
+.phone-popup .phone-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.phone-emoji {
+    font-size: 2rem;
+    animation: ring 0.5s infinite;
+}
+
+@keyframes ring {
+    0%, 100% { transform: rotate(-10deg); }
+    50% { transform: rotate(10deg); }
+}
+
+.phone-friend {
+    margin: 20px 0;
+}
+
+.friend-emoji {
+    font-size: 4rem;
+}
+
+.phone-message {
+    text-align: left;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.friend-speech {
+    color: var(--neon-cyan);
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.friend-thinking {
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.friend-answer {
+    color: var(--neon-yellow);
+    font-size: 1.1rem;
+    margin: 10px 0;
+}
+
+.friend-confidence {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+/* Result Popups */
+.jeopardy-result-popup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+}
+
+.result-content {
+    text-align: center;
+    animation: popIn 0.5s ease-out;
+}
+
+.jeopardy-result-popup.win .result-content h1 {
+    font-family: 'Bangers', cursive;
+    font-size: 3rem;
+    color: gold;
+    text-shadow: 0 0 30px gold;
+    animation: glow 1s infinite alternate;
+}
+
+.jeopardy-result-popup.lose .result-content h1 {
+    font-family: 'Bangers', cursive;
+    font-size: 3rem;
+    color: #ff4444;
+    text-shadow: 0 0 30px #ff4444;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 30px gold; }
+    to { text-shadow: 0 0 60px gold, 0 0 90px orange; }
+}
+
+.result-subtitle {
+    font-family: 'Bangers', cursive;
+    font-size: 1.5rem;
+    color: var(--neon-cyan);
+    margin: 10px 0;
+}
+
+.result-prize {
+    font-family: 'Bangers', cursive;
+    font-size: 2.5rem;
+    color: var(--neon-yellow);
+    margin: 20px 0;
+}
+
+.result-emoji {
+    font-size: 4rem;
+    margin: 20px 0;
+}
+
+.result-content button {
+    background: linear-gradient(135deg, var(--neon-pink) 0%, #cc00cc 100%);
+    border: none;
+    border-radius: 15px;
+    padding: 15px 40px;
+    font-family: 'Bangers', cursive;
+    font-size: 1.3rem;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.result-content button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px var(--neon-pink);
+}
+
+/* Confetti */
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: -10px;
+    animation: confetti-fall 3s linear forwards;
+}
+
+@keyframes confetti-fall {
+    to {
+        top: 100%;
+        transform: rotate(720deg) translateX(100px);
+        opacity: 0;
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+    .jeopardy-header h1 {
+        font-size: 1.4rem;
+    }
+    
+    .jeopardy-question {
+        font-size: 1.1rem;
+    }
+    
+    .jeopardy-answers {
+        grid-template-columns: 1fr;
+    }
+    
+    .answer-text {
+        font-size: 0.85rem;
+    }
+    
+    .lifeline-btn {
+        padding: 8px 10px;
+        min-width: 60px;
+    }
+    
+    .lifeline-text {
+        display: none;
+    }
+}

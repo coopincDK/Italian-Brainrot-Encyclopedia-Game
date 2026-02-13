@@ -215,6 +215,23 @@
                     <span>🏆</span><div id="flappy-highscore-menu"></div>
                 </div>
             </div>
+            
+            <!-- GAME 8: BRAINROT JEOPARDY -->
+            <div class="game-section">
+                <h3 class="game-section-title" style="color: gold;">🧠 BRAINROT JEOPARDY</h3>
+                <div class="mode-options">
+                    <div class="mode-option" style="border-color: gold; background: linear-gradient(135deg, #3a2a0a 0%, #1a1a0a 100%);" onclick="startJeopardy()">
+                        <div class="mode-icon">💰</div>
+                        <div class="mode-name">MILLIONÆR</div>
+                        <div class="mode-description">15 spørgsmål • 3 lifelines • Vind 1.000.000!</div>
+                    </div>
+                </div>
+                <div class="jeopardy-lifeline-preview" style="display: flex; justify-content: center; gap: 15px; margin-top: 10px; font-size: 0.8rem; color: #aaa;">
+                    <span>50:50</span>
+                    <span>👥 Publikum</span>
+                    <span>📞 Ring til Ven</span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -467,6 +484,7 @@
     <script src="descriptions.js"></script>
     <script src="script.js"></script>
     <script src="game.js"></script>
+    <script src="jeopardy.js"></script>
     
     <!-- Firebase SDK (async - loaded after main app) -->
     <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
