@@ -2970,43 +2970,339 @@ footer {
     margin-top: 20px;
 }
 
-/* Audience Bars */
-.audience-bars {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    height: 150px;
-    align-items: flex-end;
-    margin: 20px 0;
+/* Audience Bars - FIXED */
+.audience-content {
+    min-width: 350px;
 }
 
-.audience-bar-container {
+.audience-chart {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    height: 180px;
+    align-items: flex-end;
+    margin: 30px 0;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+.audience-bar-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 50px;
+    gap: 8px;
 }
 
-.audience-bar {
-    width: 40px;
-    background: linear-gradient(to top, var(--neon-cyan), var(--neon-pink));
-    border-radius: 5px 5px 0 0;
-    transition: height 1s ease-out;
-}
-
-.audience-percent {
+.audience-percent-top {
     font-family: 'Bangers', cursive;
+    font-size: 1.2rem;
     color: var(--neon-yellow);
-    margin-top: 5px;
+    text-shadow: 0 0 10px var(--neon-yellow);
 }
 
-.audience-letter {
+.audience-bar-bg {
+    width: 50px;
+    height: 120px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.audience-bar-fill {
+    width: 100%;
+    background: linear-gradient(to top, var(--neon-cyan), var(--neon-pink));
+    border-radius: 3px 3px 0 0;
+    transition: height 1s ease-out;
+    box-shadow: 0 0 15px var(--neon-cyan);
+}
+
+.audience-letter-bottom {
     font-family: 'Bangers', cursive;
+    font-size: 1.5rem;
+    color: white;
+    background: var(--neon-cyan);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+}
+
+/* Host Dialog */
+.host-content {
+    max-width: 450px;
+}
+
+.host-emoji {
+    font-size: 4rem;
+    margin-bottom: 15px;
+}
+
+.host-message {
+    color: var(--neon-green);
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.host-prize {
+    font-family: 'Bangers', cursive;
+    font-size: 2rem;
+    color: gold;
+    text-shadow: 0 0 20px gold;
+    margin: 15px 0;
+}
+
+.host-question {
+    color: #ccc;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.host-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.host-btn {
+    padding: 15px 25px;
+    font-family: 'Bangers', cursive;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.host-btn.stop-btn {
+    background: linear-gradient(135deg, gold 0%, #cc9900 100%);
+    color: black;
+}
+
+.host-btn.stop-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px gold;
+}
+
+.host-btn.continue-btn {
+    background: linear-gradient(135deg, var(--neon-pink) 0%, #cc00cc 100%);
+    color: white;
+}
+
+.host-btn.continue-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px var(--neon-pink);
+}
+
+/* Walkaway result */
+.jeopardy-result-popup.walkaway .result-content h1 {
+    font-family: 'Bangers', cursive;
+    font-size: 2.5rem;
+    color: gold;
+    text-shadow: 0 0 30px gold;
+}
+
+/* Psykologisk "Er du sikker?" Dialog */
+.psych-content {
+    max-width: 420px;
+    text-align: center;
+}
+
+.psych-emoji {
+    font-size: 3.5rem;
+    margin-bottom: 10px;
+    animation: psych-wobble 2s infinite;
+}
+
+@keyframes psych-wobble {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+}
+
+.psych-selected {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid var(--neon-yellow);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    justify-content: center;
+}
+
+.psych-letter {
+    background: var(--neon-cyan);
+    color: black;
+    font-family: 'Bangers', cursive;
+    font-size: 1.5rem;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.psych-answer {
+    font-family: 'Permanent Marker', cursive;
     font-size: 1.2rem;
     color: white;
 }
 
+.psych-trick {
+    font-family: 'Bangers', cursive;
+    font-size: 1.4rem;
+    color: #ff6666;
+    margin: 20px 0;
+    animation: psych-pulse 1.5s infinite;
+}
+
+@keyframes psych-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.02); }
+}
+
+.psych-stakes {
+    font-family: 'Bangers', cursive;
+    font-size: 1.1rem;
+    color: var(--neon-yellow);
+    margin-bottom: 20px;
+}
+
+.psych-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.psych-btn {
+    padding: 12px 25px;
+    font-family: 'Bangers', cursive;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.psych-btn.confirm-btn {
+    background: linear-gradient(135deg, #00cc00 0%, #009900 100%);
+    color: white;
+}
+
+.psych-btn.confirm-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px #00cc00;
+}
+
+.psych-btn.change-btn {
+    background: linear-gradient(135deg, #666 0%, #444 100%);
+    color: white;
+}
+
+.psych-btn.change-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #888;
+}
+
+/* Friend Selector Grid */
+.friend-selector-content {
+    max-width: 600px;
+    width: 95vw;
+}
+
+.friend-selector-content h2 {
+    margin-bottom: 20px;
+}
+
+.friend-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.friend-option {
+    background: linear-gradient(135deg, #2a1a4a 0%, #1a0a3a 100%);
+    border: 2px solid #4a4a6a;
+    border-radius: 15px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.friend-option:hover {
+    border-color: var(--neon-cyan);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px var(--neon-cyan);
+}
+
+.friend-image-container {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--neon-pink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.friend-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.friend-emoji-large {
+    font-size: 3rem;
+}
+
+.friend-name {
+    font-family: 'Bangers', cursive;
+    font-size: 0.85rem;
+    color: white;
+    text-shadow: 0 0 5px var(--neon-pink);
+}
+
+.friend-selector-content .cancel-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 0, 0, 0.3);
+    border: 2px solid #ff4444;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    font-size: 1.2rem;
+    color: #ff4444;
+    cursor: pointer;
+}
+
+.friend-selector-content .cancel-btn:hover {
+    background: #ff4444;
+    color: white;
+}
+
 /* Phone Call */
+.phone-call-content {
+    max-width: 400px;
+}
+
 .phone-popup .phone-header {
     display: flex;
     align-items: center;
@@ -3027,6 +3323,22 @@ footer {
 
 .phone-friend {
     margin: 20px 0;
+    text-align: center;
+}
+
+.phone-friend-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--neon-cyan);
+    box-shadow: 0 0 30px var(--neon-cyan);
+    animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px var(--neon-cyan); }
+    50% { box-shadow: 0 0 40px var(--neon-cyan), 0 0 60px var(--neon-pink); }
 }
 
 .friend-emoji {
@@ -3048,6 +3360,23 @@ footer {
 
 .friend-thinking {
     animation: blink 1s infinite;
+}
+
+/* Mobile responsive for friend selector */
+@media (max-width: 500px) {
+    .friend-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .friend-image-container {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .friend-name {
+        font-size: 0.7rem;
+    }
 }
 
 @keyframes blink {
@@ -3158,6 +3487,248 @@ footer {
     }
 }
 
+/* ===== BRAIN MELTDOWN THEME ===== */
+
+.meltdown-theme .jeopardy-game {
+    background: linear-gradient(135deg, #1a0a2e 0%, #16213e 50%, #0f0f23 100%);
+    border: 3px solid #ff00ff;
+    box-shadow: 0 0 50px rgba(255, 0, 255, 0.3), inset 0 0 100px rgba(138, 43, 226, 0.1);
+}
+
+.meltdown-header h1 {
+    background: linear-gradient(90deg, #ff00ff, #00ffff, #ff00ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: brain-pulse 2s infinite;
+}
+
+@keyframes brain-pulse {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.3); }
+}
+
+.meltdown-subtitle {
+    color: #aaa;
+    font-size: 0.9rem;
+    margin-top: -5px;
+    margin-bottom: 10px;
+}
+
+/* Timer Bar */
+.meltdown-timer {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 15px 0;
+    padding: 10px 20px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    border: 2px solid #333;
+}
+
+.timer-bar-container {
+    flex: 1;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #444;
+}
+
+.timer-bar {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #00ff00, #88ff00);
+    border-radius: 8px;
+    transition: width 0.1s linear, background 0.3s;
+}
+
+.timer-bar.danger {
+    animation: timer-danger 0.5s infinite;
+}
+
+@keyframes timer-danger {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.timer-text {
+    font-family: 'Bangers', cursive;
+    font-size: 1.5rem;
+    color: #fff;
+    min-width: 80px;
+    text-align: right;
+    text-shadow: 0 0 10px currentColor;
+}
+
+/* Meltdown Lifelines */
+.meltdown-lifelines {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.meltdown-lifeline {
+    background: linear-gradient(135deg, #2a1a4a 0%, #1a0a3a 100%);
+    border: 2px solid #8a2be2;
+    transition: all 0.3s;
+}
+
+.meltdown-lifeline:hover:not(.used):not(:disabled) {
+    border-color: #ff00ff;
+    box-shadow: 0 0 20px #ff00ff;
+    transform: scale(1.05);
+}
+
+.time-lifeline {
+    border-color: #00ffff;
+}
+
+.time-lifeline:hover:not(.used):not(:disabled) {
+    border-color: #00ffff;
+    box-shadow: 0 0 20px #00ffff;
+}
+
+/* Brain Ladder Tiers */
+.meltdown-ladder .tier-smooth {
+    border-left: 3px solid #888;
+}
+
+.meltdown-ladder .tier-wrinkly {
+    border-left: 3px solid #ff8800;
+}
+
+.meltdown-ladder .tier-galaxy {
+    border-left: 3px solid #ff00ff;
+    background: linear-gradient(90deg, rgba(255, 0, 255, 0.1), transparent);
+}
+
+.meltdown-ladder .checkpoint {
+    background: linear-gradient(90deg, rgba(0, 255, 0, 0.2), transparent);
+    border-left: 3px solid #00ff00;
+}
+
+.checkpoint-flag {
+    margin-left: 5px;
+}
+
+/* Time Bonus Popup */
+.time-bonus-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #00ffff, #0088ff);
+    padding: 30px 50px;
+    border-radius: 20px;
+    font-family: 'Bangers', cursive;
+    font-size: 2rem;
+    color: #000;
+    z-index: 10000;
+    animation: time-bonus 0.5s ease-out;
+    box-shadow: 0 0 50px #00ffff;
+}
+
+@keyframes time-bonus {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    50% { transform: translate(-50%, -50%) scale(1.2); }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+/* Meltdown Popup */
+.meltdown-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: meltdown-appear 0.5s;
+}
+
+@keyframes meltdown-appear {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.meltdown-content {
+    text-align: center;
+    padding: 40px;
+    background: linear-gradient(135deg, #2a0a0a 0%, #1a0a2a 100%);
+    border: 3px solid #ff0000;
+    border-radius: 20px;
+    box-shadow: 0 0 50px rgba(255, 0, 0, 0.5);
+    animation: meltdown-shake 0.5s;
+}
+
+@keyframes meltdown-shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-20px); }
+    40% { transform: translateX(20px); }
+    60% { transform: translateX(-10px); }
+    80% { transform: translateX(10px); }
+}
+
+.meltdown-content h1 {
+    font-family: 'Bangers', cursive;
+    font-size: 3rem;
+    color: #ff0000;
+    text-shadow: 0 0 20px #ff0000;
+    margin-bottom: 20px;
+}
+
+.meltdown-brain {
+    font-size: 5rem;
+    animation: brain-melt 1s infinite;
+}
+
+@keyframes brain-melt {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.1) rotate(-5deg); }
+    50% { transform: scale(0.9) rotate(5deg); }
+    75% { transform: scale(1.05) rotate(-3deg); }
+}
+
+.meltdown-message {
+    font-size: 1.5rem;
+    color: #ff6666;
+    margin: 20px 0;
+}
+
+.meltdown-collected {
+    font-size: 1.2rem;
+    color: #aaa;
+    margin-bottom: 30px;
+}
+
+.meltdown-collected strong {
+    color: #00ffff;
+    font-size: 1.5rem;
+}
+
+.meltdown-btn {
+    font-family: 'Bangers', cursive;
+    font-size: 1.5rem;
+    padding: 15px 40px;
+    background: linear-gradient(135deg, #ff00ff, #8a2be2);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.meltdown-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px #ff00ff;
+}
+
 /* Mobile Responsive */
 @media (max-width: 600px) {
     .jeopardy-header h1 {
@@ -3183,5 +3754,22 @@ footer {
     
     .lifeline-text {
         display: none;
+    }
+    
+    .meltdown-timer {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .timer-text {
+        font-size: 1.2rem;
+    }
+    
+    .meltdown-content h1 {
+        font-size: 2rem;
+    }
+    
+    .meltdown-brain {
+        font-size: 3rem;
     }
 }

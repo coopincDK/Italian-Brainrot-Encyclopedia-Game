@@ -1,229 +1,399 @@
 // ============================================
-// BRAINROT JEOPARDY - "Hvem vil være Brainrot Millionær"
-// 15 spørgsmål, 3 lifelines, epic gameplay!
+// BRAINROT BRAIN MELTDOWN 🧠💥
+// Saml hjerneceller - undgå MELTDOWN!
+// 15 spørgsmål, 3 boosts, epic gameplay!
 // ============================================
 
 'use strict';
 
-// ===== JEOPARDY GAME STATE =====
+// ===== GAME STATE =====
 const JeopardyState = {
     active: false,
     currentQuestion: 0,
     score: 0,
+    brainCells: 0,  // Starter ved 0, samler op!
     lifelines: {
-        fiftyFifty: true,
-        askAudience: true,
-        phoneAFriend: true
+        brainBoost: true,      // 50:50 - fjerner 2 forkerte svar
+        crowdChaos: true,      // Crowd Chaos - spørg publikum  
+        callARot: true,        // Ring til en Rot
+        giveMe2: true          // Giv mig 2! - 2 minutter ekstra tid
     },
     questions: [],
     selectedAnswer: null,
-    isAnswerLocked: false
+    isAnswerLocked: false,
+    // Timer system
+    timeLeft: 10,
+    timerInterval: null,
+    timerPaused: false,
+    baseTime: 10  // Standard 10 sekunder
 };
 
-// ===== PRIZE LADDER (like Millionaire) =====
-const PRIZE_LADDER = [
-    100, 200, 300, 500, 1000,           // Spørgsmål 1-5
-    2000, 4000, 8000, 16000, 32000,     // Spørgsmål 6-10
-    64000, 125000, 250000, 500000, 1000000  // Spørgsmål 11-15
+// ===== BRAIN CELL LADDER =====
+// Starter ved 100, ender ved 1.000.000 hjerneceller!
+const BRAIN_CELL_LADDER = [
+    100, 200, 500, 1000, 2500,           // Level 1-5 (Smooth Brain)
+    5000, 10000, 25000, 50000, 100000,   // Level 6-10 (Wrinkly Brain)
+    250000, 500000, 750000, 900000, 1000000  // Level 11-15 (GALAXY BRAIN)
 ];
 
-// Safe havens (guaranteed money)
-const SAFE_HAVENS = [4, 9, 14]; // After Q5, Q10, Q15
+// Checkpoints - mister ikke alt hvis du fejler efter disse
+const BRAIN_CHECKPOINTS = [4, 9];  // Efter level 5 og 10
 
-// ===== BRAINROT FRIENDS (for Phone-a-Friend) =====
+// ===== BRAINROT FRIENDS =====
 const BRAINROT_FRIENDS = [
-    { name: "TRALALERO TRALALA", emoji: "🦈", catchphrase: "Tralala! Jeg er ret sikker på det er" },
-    { name: "BOMBARDIRO CROCODILO", emoji: "🐊", catchphrase: "BOOM! Mit bomber-instinkt siger" },
-    { name: "CAPPUCCINO ASSASSINO", emoji: "☕", catchphrase: "La morte è una tazzina... svaret er" },
-    { name: "LIRILI LARILA", emoji: "🐘", catchphrase: "*trompet lyde* Jeg tror det er" },
-    { name: "TRIPPI TROPPI", emoji: "🍄", catchphrase: "Woooah dude... i min psykedeliske vision ser jeg" },
-    { name: "CHIMPANZINI BANANINI", emoji: "🐵", catchphrase: "OOH OOH AH AH! Banan-hjernen siger" }
+    { name: "TRALALERO TRALALA", emoji: "🦈", catchphrase: { da: "Tralala! Jeg er ret sikker på det er", en: "Tralala! I'm pretty sure it's" }},
+    { name: "BOMBARDIRO CROCODILO", emoji: "🐊", catchphrase: { da: "BOOM! Mit bomber-instinkt siger", en: "BOOM! My bomber instinct says" }},
+    { name: "CAPPUCCINO ASSASSINO", emoji: "☕", catchphrase: { da: "La morte è una tazzina... svaret er", en: "La morte è una tazzina... the answer is" }},
+    { name: "LIRILI LARILA", emoji: "🐘", catchphrase: { da: "*trompet lyde* Jeg tror det er", en: "*trumpet sounds* I think it's" }},
+    { name: "TRIPPI TROPPI", emoji: "🍄", catchphrase: { da: "Woooah dansen... i min psykedeliske vision ser jeg", en: "Woooah dude... in my psychedelic vision I see" }},
+    { name: "CHIMPANZINI BANANINI", emoji: "🐵", catchphrase: { da: "OOH OOH AH AH! Banan-hjernen siger", en: "OOH OOH AH AH! Banana-brain says" }},
+    { name: "GLORBO FRUTTODRILLO", emoji: "🥝", catchphrase: { da: "Fruuugt! Min frugt-intuition siger", en: "Fruuuit! My fruit intuition says" }},
+    { name: "BRR BRR PATAPIM", emoji: "🦎", catchphrase: { da: "Brrr... *zen åndedrag* Svaret er", en: "Brrr... *zen breathing* The answer is" }},
+    { name: "SIGMA BOY", emoji: "😎", catchphrase: { da: "Sigma regel #47: Svaret er altid", en: "Sigma rule #47: The answer is always" }}
 ];
 
-// ===== 15 QUIZ QUESTIONS (based on descriptions) =====
+// Funktion til at finde karakter-billede
+function getFriendImage(friendName) {
+    if (typeof CHARACTERS === 'undefined') return null;
+    const char = CHARACTERS.find(c => c.name.toUpperCase() === friendName.toUpperCase());
+    return char ? char.image : null;
+}
+
+// ===== TRANSLATIONS =====
+const MELTDOWN_TEXT = {
+    da: {
+        title: "🧠 BRAIN MELTDOWN 💥",
+        subtitle: "Saml hjerneceller - undgå MELTDOWN!",
+        question: "Niveau",
+        prize: "Hjerneceller",
+        brainCells: "hjerneceller",
+        lock: "🔒 LÅS SVAR",
+        brainBoost: "🧠 Hjerne-Boost",
+        crowdChaos: "👥 Crowd Chaos",
+        callARot: "📞 Ring en Rot",
+        giveMe2: "⏰ Giv mig 2!",
+        brainLadder: "🧠 HJERNECELLE-STIGE 🧠",
+        smoothBrain: "Smooth Brain",
+        wrinklyBrain: "Wrinkly Brain",
+        galaxyBrain: "GALAXY BRAIN",
+        congrats: "🎉 GALAXY BRAIN OPNÅET! 🎉",
+        youAreGalaxyBrain: "DU HAR 1.000.000 HJERNECELLER!",
+        meltdown: "💥 BRAIN MELTDOWN! 💥",
+        wrongAnswer: "Din hjerne smeltede!",
+        timeUp: "⏰ TIDEN LØB UD!",
+        youCollected: "Du samlede",
+        checkpoint: "Checkpoint reddet dig!",
+        playAgain: "PRØV IGEN 🔄",
+        crowdSays: "👥 CROWD CHAOS:",
+        ok: "OK 👍",
+        callingRot: "Ringer til",
+        thinking: "🤔 *tænker*",
+        thanksForHelp: "Tak for hjælpen! 🙏",
+        notSure: "...men æææh, jeg er ikke 100% sikker...",
+        maybeBe: "Måske er det",
+        noNo: "Nej nej, jeg tror det er",
+        timeLeft: "Tid",
+        seconds: "sek",
+        extraTime: "+2 MINUTTER!",
+        checkpointReached: "🚩 CHECKPOINT!",
+        checkpointMessage: "Du har {cells} hjerneceller! Fortsæt eller tag dine celler?",
+        keepGoing: "FORTSÆT! 🚀",
+        takeCells: "TAG CELLERNE 🧠",
+        areYouSure: "Er du sikker?",
+        finalAnswer: "Er det dit endelige svar?",
+        thinkAboutIt: "Tænk dig godt om...",
+        bigRisk: "Der er mange hjerneceller på spil!",
+        loseItAll: "Hvis du tager fejl, smelter din hjerne!",
+        crowdWrong: "Crowden er også lidt brainrotted...",
+        rotWrong: "Din Rot lød ikke helt sikker...",
+        stillTime: "Du har stadig tid til at skifte mening.",
+        interestingChoice: "Interessant valg...",
+        mostPeopleWouldnt: "De fleste ville ikke vælge det svar...",
+        youLookNervous: "Du ser lidt nervøs ud...",
+        trustYourGut: "Stoler du på din mavefornemmelse?",
+        confirm: "JA, LÅS SVAR",
+        changeAnswer: "NEJ, SKIFT SVAR",
+        chooseRot: "Vælg din Rot:",
+        callNow: "RING NU"
+    },
+    en: {
+        title: "🧠 BRAIN MELTDOWN 💥",
+        subtitle: "Collect brain cells - avoid MELTDOWN!",
+        question: "Level",
+        prize: "Brain Cells",
+        brainCells: "brain cells",
+        lock: "🔒 LOCK ANSWER",
+        brainBoost: "🧠 Brain Boost",
+        crowdChaos: "👥 Crowd Chaos",
+        callARot: "📞 Call a Rot",
+        giveMe2: "⏰ Give me 2!",
+        brainLadder: "🧠 BRAIN CELL LADDER 🧠",
+        smoothBrain: "Smooth Brain",
+        wrinklyBrain: "Wrinkly Brain",
+        galaxyBrain: "GALAXY BRAIN",
+        congrats: "🎉 GALAXY BRAIN ACHIEVED! 🎉",
+        youAreGalaxyBrain: "YOU HAVE 1,000,000 BRAIN CELLS!",
+        meltdown: "💥 BRAIN MELTDOWN! 💥",
+        wrongAnswer: "Your brain melted!",
+        timeUp: "⏰ TIME'S UP!",
+        youCollected: "You collected",
+        checkpoint: "Checkpoint saved you!",
+        playAgain: "TRY AGAIN 🔄",
+        crowdSays: "👥 CROWD CHAOS:",
+        ok: "OK 👍",
+        callingRot: "Calling",
+        thinking: "🤔 *thinking*",
+        thanksForHelp: "Thanks for the help! 🙏",
+        notSure: "...but uhhh, I'm not 100% sure...",
+        maybeBe: "Maybe it's",
+        noNo: "No no, I think it's",
+        timeLeft: "Time",
+        seconds: "sec",
+        extraTime: "+2 MINUTES!",
+        checkpointReached: "🚩 CHECKPOINT!",
+        checkpointMessage: "You have {cells} brain cells! Continue or take your cells?",
+        keepGoing: "KEEP GOING! 🚀",
+        takeCells: "TAKE THE CELLS 🧠",
+        areYouSure: "Are you sure?",
+        finalAnswer: "Is that your final answer?",
+        thinkAboutIt: "Think carefully...",
+        bigRisk: "There are many brain cells at stake!",
+        loseItAll: "If you're wrong, your brain melts!",
+        crowdWrong: "The crowd is also a bit brainrotted...",
+        rotWrong: "Your Rot didn't sound too sure...",
+        stillTime: "You still have time to change your mind.",
+        interestingChoice: "Interesting choice...",
+        mostPeopleWouldnt: "Most people wouldn't pick that answer...",
+        youLookNervous: "You look a bit nervous...",
+        trustYourGut: "Do you trust your gut feeling?",
+        confirm: "YES, LOCK ANSWER",
+        changeAnswer: "NO, CHANGE ANSWER",
+        chooseRot: "Choose your Rot:",
+        callNow: "CALL NOW"
+    }
+};
+
+function getMeltdownText(key) {
+    const lang = (typeof currentLanguage !== 'undefined') ? currentLanguage : 'da';
+    return MELTDOWN_TEXT[lang]?.[key] || MELTDOWN_TEXT['da'][key] || key;
+}
+
+// Alias for backward compatibility
+const JEOPARDY_TEXT = MELTDOWN_TEXT;
+function getJeopardyText(key) { return getMeltdownText(key); }
+
+// ===== 15 QUIZ QUESTIONS =====
 const JEOPARDY_QUESTIONS = [
     // EASY (1-5)
     {
-        question: "Hvilken karakter er en haj med menneskeben?",
+        question: { da: "Hvilken karakter er en haj med menneskeben?", en: "Which character is a shark with human legs?" },
         answers: ["TRALALERO TRALALA", "BOMBARDIRO CROCODILO", "CAPPUCCINO ASSASSINO", "LIRILI LARILA"],
-        correct: 0,
-        image: "tralalero_tralala"
+        correct: 0
     },
     {
-        question: "Hvad er TUNG TUNG TUNG SAHURs hellige job?",
-        answers: ["At lave pizza", "At vække folk til Sahur", "At danse ballet", "At flyve bomber"],
-        correct: 1,
-        image: "tung_tung_tung_sahur"
+        question: { da: "Hvad er TUNG TUNG TUNG SAHURs hellige job?", en: "What is TUNG TUNG TUNG SAHUR's sacred job?" },
+        answers: { da: ["At lave pizza", "At vække folk til Sahur", "At danse ballet", "At flyve bomber"], en: ["Making pizza", "Waking people for Sahur", "Dancing ballet", "Flying bombers"] },
+        correct: 1
     },
     {
-        question: "Hvad er BALLERINA CAPPUCCINA lavet af?",
-        answers: ["Chokolade", "Cappuccino", "Marmor", "Bananer"],
-        correct: 1,
-        image: "ballerina_cappuccina"
+        question: { da: "Hvad er BALLERINA CAPPUCCINA lavet af?", en: "What is BALLERINA CAPPUCCINA made of?" },
+        answers: { da: ["Chokolade", "Cappuccino", "Marmor", "Bananer"], en: ["Chocolate", "Cappuccino", "Marble", "Bananas"] },
+        correct: 1
     },
     {
-        question: "Hvad er BOMBARDIRO CROCODILO bange for?",
-        answers: ["Flyvemaskiner", "Gummiænder", "Krokodiller", "Bomber"],
-        correct: 1,
-        image: "bombardiro_crocodilo"
+        question: { da: "Hvad er BOMBARDIRO CROCODILO bange for?", en: "What is BOMBARDIRO CROCODILO afraid of?" },
+        answers: { da: ["Flyvemaskiner", "Gummiænder", "Krokodiller", "Bomber"], en: ["Airplanes", "Rubber ducks", "Crocodiles", "Bombs"] },
+        correct: 1
     },
     {
-        question: "Hvilken karakter er en kaffe-snigmorder?",
+        question: { da: "Hvilken karakter er en kaffe-snigmorder?", en: "Which character is a coffee assassin?" },
         answers: ["BALLERINA CAPPUCCINA", "TRIPPI TROPPI", "CAPPUCCINO ASSASSINO", "LIRILI LARILA"],
-        correct: 2,
-        image: "cappuccino_assassino"
+        correct: 2
     },
-    
     // MEDIUM (6-10)
     {
-        question: "Hvad siger CAPPUCCINO ASSASSINO før han slår til?",
+        question: { da: "Hvad siger CAPPUCCINO ASSASSINO før han slår til?", en: "What does CAPPUCCINO ASSASSINO say before he strikes?" },
         answers: ["Ciao bella!", "La morte è una tazzina", "Espresso yourself!", "Coffee time!"],
-        correct: 1,
-        image: "cappuccino_assassino"
+        correct: 1
     },
     {
-        question: "Hvilken karakter kan hypnotisere fjender med dans?",
+        question: { da: "Hvilken karakter kan hypnotisere fjender med dans?", en: "Which character can hypnotize enemies with dance?" },
         answers: ["BRR BRR PATAPIM", "TRALALERO TRALALA", "TUNG TUNG TUNG SAHUR", "BOMBARDIRO CROCODILO"],
-        correct: 1,
-        image: "tralalero_tralala"
+        correct: 1
     },
     {
-        question: "Hvad er LIRILI LARILAs specielle evne?",
-        answers: ["At flyve", "At lave musik med sin snabel", "At spytte ild", "At blive usynlig"],
-        correct: 1,
-        image: "lirili_larila"
+        question: { da: "Hvad er LIRILI LARILAs specielle evne?", en: "What is LIRILI LARILA's special ability?" },
+        answers: { da: ["At flyve", "At lave musik med sin snabel", "At spytte ild", "At blive usynlig"], en: ["Flying", "Making music with trunk", "Spitting fire", "Becoming invisible"] },
+        correct: 1
     },
     {
-        question: "Hvornår blev BALLERINA CAPPUCCINA født?",
+        question: { da: "Hvornår blev BALLERINA CAPPUCCINA født?", en: "When was BALLERINA CAPPUCCINA born?" },
         answers: ["Kl. 12:00", "Kl. 6:47", "Kl. 3:33", "Kl. 9:15"],
-        correct: 1,
-        image: "ballerina_cappuccina"
+        correct: 1
     },
     {
-        question: "Hvad forårsagede BOMBARDIRO CROCODILO ved et uheld?",
-        answers: ["En tsunami", "En is-krise (gelato-stand bombing)", "En jordskælv", "En vulkanudbrud"],
-        correct: 1,
-        image: "bombardiro_crocodilo"
+        question: { da: "Hvad forårsagede BOMBARDIRO CROCODILO ved et uheld?", en: "What did BOMBARDIRO CROCODILO accidentally cause?" },
+        answers: { da: ["En tsunami", "En is-krise (gelato-stand bombing)", "En jordskælv", "Et vulkanudbrud"], en: ["A tsunami", "An ice cream crisis (gelato stand bombing)", "An earthquake", "A volcanic eruption"] },
+        correct: 1
     },
-    
     // HARD (11-15)
     {
-        question: "Hvad er TRIPPI TROPPIs oprindelse?",
-        answers: ["En vulkan", "En diskokugle + porcini svamp ved 70'er rave", "Et laboratorium", "En regnbue"],
-        correct: 1,
-        image: "trippi_troppi"
+        question: { da: "Hvad er TRIPPI TROPPIs oprindelse?", en: "What is TRIPPI TROPPI's origin?" },
+        answers: { da: ["En vulkan", "En diskokugle + porcini svamp ved 70'er rave", "Et laboratorium", "En regnbue"], en: ["A volcano", "A disco ball + porcini mushroom at 70s rave", "A laboratory", "A rainbow"] },
+        correct: 1
     },
     {
-        question: "Hvad er BRR BRR PATAPAMs personlighed?",
-        answers: ["Aggressiv og vild", "Overraskende zen og rolig", "Konstant sur", "Ekstremt snakkesalig"],
-        correct: 1,
-        image: "brr_brr_patapim"
+        question: { da: "Hvad er BRR BRR PATAPAMs personlighed?", en: "What is BRR BRR PATAPAM's personality?" },
+        answers: { da: ["Aggressiv og vild", "Overraskende zen og rolig", "Konstant sur", "Ekstremt snakkesalig"], en: ["Aggressive and wild", "Surprisingly zen and calm", "Constantly grumpy", "Extremely talkative"] },
+        correct: 1
     },
     {
-        question: "Hvad skete der da TRALALERO TRALALA vandt en dance-off?",
-        answers: ["Han blev konge", "Internettet crashede i 3 timer", "Han fik en pris", "Ingenting særligt"],
-        correct: 1,
-        image: "tralalero_tralala"
+        question: { da: "Hvad skete der da TRALALERO TRALALA vandt en dance-off?", en: "What happened when TRALALERO TRALALA won a dance-off?" },
+        answers: { da: ["Han blev konge", "Internettet crashede i 3 timer", "Han fik en pris", "Ingenting særligt"], en: ["He became king", "The internet crashed for 3 hours", "He got a prize", "Nothing special"] },
+        correct: 1
     },
     {
-        question: "Hvad er CHIMPANZINI BANANINIs DNA-sammensætning?",
-        answers: ["50% abe, 50% banan", "70% banan, 30% meme-energi", "100% chimpanse", "60% frugt, 40% dyr"],
-        correct: 1,
-        image: "chimpanzini_bananini"
+        question: { da: "Hvad er CHIMPANZINI BANANINIs DNA-sammensætning?", en: "What is CHIMPANZINI BANANINI's DNA composition?" },
+        answers: { da: ["50% abe, 50% banan", "70% banan, 30% meme-energi", "100% chimpanse", "60% frugt, 40% dyr"], en: ["50% ape, 50% banana", "70% banana, 30% meme energy", "100% chimpanzee", "60% fruit, 40% animal"] },
+        correct: 1
     },
     {
-        question: "Hvad er TRALALERO TRALALAs hemmelige kostplan?",
-        answers: ["Han spiser kun fisk", "Han er faktisk vegetar!", "Han spiser kun kød", "Han spiser alt"],
-        correct: 1,
-        image: "tralalero_tralala"
+        question: { da: "Hvad er TRALALERO TRALALAs hemmelige kostplan?", en: "What is TRALALERO TRALALA's secret diet?" },
+        answers: { da: ["Han spiser kun fisk", "Han er faktisk vegetar!", "Han spiser kun kød", "Han spiser alt"], en: ["He only eats fish", "He's actually vegetarian!", "He only eats meat", "He eats everything"] },
+        correct: 1
     }
 ];
 
-// ===== JEOPARDY UI FUNCTIONS =====
+function getQuestionText(q) {
+    const lang = (typeof currentLanguage !== 'undefined') ? currentLanguage : 'da';
+    if (typeof q.question === 'string') return q.question;
+    return q.question[lang] || q.question['da'];
+}
+
+function getAnswers(q) {
+    const lang = (typeof currentLanguage !== 'undefined') ? currentLanguage : 'da';
+    if (Array.isArray(q.answers)) return q.answers;
+    return q.answers[lang] || q.answers['da'];
+}
+
+// ===== MAIN FUNCTIONS =====
 
 function startJeopardy() {
-    console.log('🎮 Starting Brainrot Jeopardy!');
+    console.log('🧠 Starting Brain Meltdown!');
     
-    // Reset state
     JeopardyState.active = true;
     JeopardyState.currentQuestion = 0;
     JeopardyState.score = 0;
-    JeopardyState.lifelines = { fiftyFifty: true, askAudience: true, phoneAFriend: true };
+    JeopardyState.brainCells = 0;
+    JeopardyState.lifelines = { 
+        brainBoost: true, 
+        crowdChaos: true, 
+        callARot: true,
+        giveMe2: true 
+    };
     JeopardyState.questions = shuffleArray([...JEOPARDY_QUESTIONS]).slice(0, 15);
     JeopardyState.selectedAnswer = null;
     JeopardyState.isAnswerLocked = false;
+    JeopardyState.timeLeft = 10;
+    JeopardyState.timerPaused = false;
     
-    // Hide other UI, show Jeopardy
     document.getElementById('game-mode-selection').style.display = 'none';
-    document.getElementById('play-quiz-btn').style.display = 'none';
     
-    showJeopardyUI();
+    showMeltdownUI();
     showQuestion();
 }
 
 function showJeopardyUI() {
-    // Remove existing if any
     const existing = document.getElementById('jeopardy-container');
     if (existing) existing.remove();
     
     const container = document.createElement('div');
     container.id = 'jeopardy-container';
-    container.className = 'jeopardy-container';
+    container.className = 'jeopardy-container meltdown-theme';
     container.innerHTML = `
         <div class="jeopardy-overlay"></div>
-        <div class="jeopardy-game">
+        <div class="jeopardy-game meltdown-game">
             <button class="jeopardy-close" onclick="exitJeopardy()">✕</button>
             
-            <div class="jeopardy-header">
-                <h1>🧠 BRAINROT JEOPARDY 🇮🇹</h1>
+            <div class="jeopardy-header meltdown-header">
+                <h1>${getMeltdownText('title')}</h1>
+                <p class="meltdown-subtitle">${getMeltdownText('subtitle')}</p>
                 <div class="jeopardy-progress">
-                    <span id="jeopardy-question-num">Spørgsmål 1/15</span>
-                    <span id="jeopardy-prize">💰 0 kr</span>
+                    <span id="jeopardy-question-num">${getMeltdownText('question')} 1/15</span>
+                    <span id="jeopardy-prize">🧠 0 ${getMeltdownText('brainCells')}</span>
                 </div>
             </div>
             
-            <div class="jeopardy-lifelines">
-                <button id="lifeline-5050" class="lifeline-btn" onclick="useFiftyFifty()">
-                    <span class="lifeline-icon">50:50</span>
+            <!-- TIMER BAR -->
+            <div class="meltdown-timer" id="meltdown-timer">
+                <div class="timer-bar-container">
+                    <div class="timer-bar" id="timer-bar"></div>
+                </div>
+                <span class="timer-text" id="timer-text">10 ${getMeltdownText('seconds')}</span>
+            </div>
+            
+            <div class="jeopardy-lifelines meltdown-lifelines">
+                <button id="lifeline-5050" class="lifeline-btn meltdown-lifeline" onclick="useFiftyFifty()">
+                    <span class="lifeline-icon">🧠</span>
+                    <span class="lifeline-text">${getMeltdownText('brainBoost')}</span>
                 </button>
-                <button id="lifeline-audience" class="lifeline-btn" onclick="useAskAudience()">
+                <button id="lifeline-audience" class="lifeline-btn meltdown-lifeline" onclick="useAskAudience()">
                     <span class="lifeline-icon">👥</span>
-                    <span class="lifeline-text">Spørg Publikum</span>
+                    <span class="lifeline-text">${getMeltdownText('crowdChaos')}</span>
                 </button>
-                <button id="lifeline-phone" class="lifeline-btn" onclick="usePhoneAFriend()">
+                <button id="lifeline-phone" class="lifeline-btn meltdown-lifeline" onclick="usePhoneAFriend()">
                     <span class="lifeline-icon">📞</span>
-                    <span class="lifeline-text">Ring til en Ven</span>
+                    <span class="lifeline-text">${getMeltdownText('callARot')}</span>
+                </button>
+                <button id="lifeline-time" class="lifeline-btn meltdown-lifeline time-lifeline" onclick="useGiveMe2()">
+                    <span class="lifeline-icon">⏰</span>
+                    <span class="lifeline-text">${getMeltdownText('giveMe2')}</span>
                 </button>
             </div>
             
             <div class="jeopardy-question-area">
-                <div id="jeopardy-image" class="jeopardy-image"></div>
                 <div id="jeopardy-question" class="jeopardy-question"></div>
             </div>
             
-            <div id="jeopardy-answers" class="jeopardy-answers">
-                <!-- Answers generated dynamically -->
-            </div>
+            <div id="jeopardy-answers" class="jeopardy-answers"></div>
             
             <div id="jeopardy-actions" class="jeopardy-actions">
-                <button id="jeopardy-lock-btn" class="jeopardy-lock-btn" onclick="lockAnswer()" disabled>
-                    🔒 LÅS SVAR
+                <button id="jeopardy-lock-btn" class="jeopardy-lock-btn meltdown-lock" onclick="lockAnswer()" disabled>
+                    ${getMeltdownText('lock')}
                 </button>
             </div>
             
-            <div class="jeopardy-prize-ladder" id="jeopardy-ladder">
-                <!-- Prize ladder generated dynamically -->
-            </div>
+            <div class="jeopardy-prize-ladder meltdown-ladder" id="jeopardy-ladder"></div>
         </div>
     `;
     
     document.body.appendChild(container);
-    generatePrizeLadder();
+    generateBrainLadder();
+}
+
+function generateBrainLadder() {
+    const ladder = document.getElementById('jeopardy-ladder');
+    let html = `<div class="ladder-title">${getMeltdownText('brainLadder')}</div>`;
+    
+    for (let i = BRAIN_CELL_LADDER.length - 1; i >= 0; i--) {
+        const isCheckpoint = BRAIN_CHECKPOINTS.includes(i);
+        const isCurrent = i === JeopardyState.currentQuestion;
+        const tier = i < 5 ? 'smooth' : (i < 10 ? 'wrinkly' : 'galaxy');
+        html += `
+            <div class="ladder-step ${isCheckpoint ? 'checkpoint' : ''} ${isCurrent ? 'current' : ''} tier-${tier}" id="ladder-${i}">
+                <span class="ladder-num">${i + 1}</span>
+                <span class="ladder-prize">${formatBrainCells(BRAIN_CELL_LADDER[i])}</span>
+                ${isCheckpoint ? '<span class="checkpoint-flag">🚩</span>' : ''}
+            </div>
+        `;
+    }
+    
+    ladder.innerHTML = html;
 }
 
 function generatePrizeLadder() {
     const ladder = document.getElementById('jeopardy-ladder');
-    let html = '<div class="ladder-title">💎 PRÆMIESTIGE 💎</div>';
+    let html = `<div class="ladder-title">${getJeopardyText('prizeLadder')}</div>`;
     
     for (let i = PRIZE_LADDER.length - 1; i >= 0; i--) {
         const isSafe = SAFE_HAVENS.includes(i);
@@ -243,6 +413,148 @@ function formatPrize(amount) {
     return amount.toLocaleString('da-DK') + ' kr';
 }
 
+function formatBrainCells(amount) {
+    if (amount >= 1000000) return '1M 🧠';
+    if (amount >= 1000) return (amount / 1000) + 'K 🧠';
+    return amount + ' 🧠';
+}
+
+// ===== TIMER SYSTEM =====
+function startTimer() {
+    stopTimer();
+    JeopardyState.timeLeft = JeopardyState.baseTime;
+    JeopardyState.timerPaused = false;
+    updateTimerDisplay();
+    
+    JeopardyState.timerInterval = setInterval(() => {
+        if (JeopardyState.timerPaused) return;
+        
+        JeopardyState.timeLeft -= 0.1;
+        updateTimerDisplay();
+        
+        if (JeopardyState.timeLeft <= 0) {
+            stopTimer();
+            timeUp();
+        }
+    }, 100);
+}
+
+function stopTimer() {
+    if (JeopardyState.timerInterval) {
+        clearInterval(JeopardyState.timerInterval);
+        JeopardyState.timerInterval = null;
+    }
+}
+
+function pauseTimer() {
+    JeopardyState.timerPaused = true;
+}
+
+function resumeTimer() {
+    JeopardyState.timerPaused = false;
+}
+
+function updateTimerDisplay() {
+    const timerBar = document.getElementById('timer-bar');
+    const timerText = document.getElementById('timer-text');
+    if (!timerBar || !timerText) return;
+    
+    const percent = (JeopardyState.timeLeft / JeopardyState.baseTime) * 100;
+    timerBar.style.width = percent + '%';
+    
+    if (percent > 50) {
+        timerBar.style.background = 'linear-gradient(90deg, #00ff00, #88ff00)';
+        timerBar.classList.remove('danger');
+    } else if (percent > 25) {
+        timerBar.style.background = 'linear-gradient(90deg, #ffff00, #ff8800)';
+        timerBar.classList.remove('danger');
+    } else {
+        timerBar.style.background = 'linear-gradient(90deg, #ff4400, #ff0000)';
+        timerBar.classList.add('danger');
+    }
+    
+    timerText.textContent = Math.ceil(JeopardyState.timeLeft) + ' ' + getMeltdownText('seconds');
+}
+
+function timeUp() {
+    JeopardyState.isAnswerLocked = true;
+    if (typeof AudioSystem !== 'undefined') {
+        AudioSystem.playTone(150, 0.5, 'sawtooth', 0.4);
+    }
+    showMeltdown(true);
+}
+
+// ===== LIFELINE: GIV MIG 2! =====
+function useGiveMe2() {
+    if (!JeopardyState.lifelines.giveMe2 || JeopardyState.isAnswerLocked) return;
+    
+    JeopardyState.lifelines.giveMe2 = false;
+    const btn = document.getElementById('lifeline-time');
+    if (btn) {
+        btn.classList.add('used');
+        btn.disabled = true;
+    }
+    
+    JeopardyState.timeLeft += 120;
+    JeopardyState.baseTime = JeopardyState.timeLeft;
+    
+    const popup = document.createElement('div');
+    popup.className = 'time-bonus-popup';
+    popup.innerHTML = `<span>⏰ ${getMeltdownText('extraTime')}</span>`;
+    document.getElementById('jeopardy-container')?.appendChild(popup);
+    setTimeout(() => popup.remove(), 2000);
+    
+    if (typeof AudioSystem !== 'undefined') {
+        AudioSystem.playTone(800, 0.2, 'sine', 0.3);
+        setTimeout(() => AudioSystem.playTone(1000, 0.2, 'sine', 0.3), 150);
+    }
+    
+    updateTimerDisplay();
+}
+
+function showMeltdown(isTimeout = false) {
+    stopTimer();
+    
+    const checkpointCells = getCheckpointCells();
+    const message = isTimeout ? getMeltdownText('timeUp') : getMeltdownText('wrongAnswer');
+    
+    const popup = document.createElement('div');
+    popup.className = 'meltdown-popup';
+    popup.innerHTML = `
+        <div class="meltdown-content">
+            <h1>${getMeltdownText('meltdown')}</h1>
+            <div class="meltdown-brain">🧠💥</div>
+            <p class="meltdown-message">${message}</p>
+            <p class="meltdown-collected">
+                ${getMeltdownText('youCollected')} <strong>${formatBrainCells(checkpointCells)}</strong>
+                ${checkpointCells > 0 ? '<br><small>(' + getMeltdownText('checkpoint') + ')</small>' : ''}
+            </p>
+            <button class="meltdown-btn" onclick="restartMeltdown()">
+                ${getMeltdownText('playAgain')}
+            </button>
+        </div>
+    `;
+    document.getElementById('jeopardy-container')?.appendChild(popup);
+    
+    if (typeof AudioSystem !== 'undefined') {
+        AudioSystem.playTone(100, 0.8, 'sawtooth', 0.5);
+    }
+}
+
+function getCheckpointCells() {
+    for (let i = BRAIN_CHECKPOINTS.length - 1; i >= 0; i--) {
+        if (JeopardyState.currentQuestion > BRAIN_CHECKPOINTS[i]) {
+            return BRAIN_CELL_LADDER[BRAIN_CHECKPOINTS[i]];
+        }
+    }
+    return 0;
+}
+
+function restartMeltdown() {
+    document.querySelector('.meltdown-popup')?.remove();
+    startJeopardy();
+}
+
 function showQuestion() {
     const q = JeopardyState.questions[JeopardyState.currentQuestion];
     if (!q) {
@@ -252,45 +564,35 @@ function showQuestion() {
     
     JeopardyState.selectedAnswer = null;
     JeopardyState.isAnswerLocked = false;
+    JeopardyState.baseTime = 10; // Reset til 10 sekunder
     
-    // Update header
+    // Opdater header med hjerneceller
     document.getElementById('jeopardy-question-num').textContent = 
-        `Spørgsmål ${JeopardyState.currentQuestion + 1}/15`;
+        `${getMeltdownText('question')} ${JeopardyState.currentQuestion + 1}/15`;
+    
+    const currentCells = JeopardyState.currentQuestion > 0 ? BRAIN_CELL_LADDER[JeopardyState.currentQuestion - 1] : 0;
     document.getElementById('jeopardy-prize').textContent = 
-        `💰 ${formatPrize(JeopardyState.currentQuestion > 0 ? PRIZE_LADDER[JeopardyState.currentQuestion - 1] : 0)}`;
+        `🧠 ${formatBrainCells(currentCells)}`;
     
-    // Show question
-    document.getElementById('jeopardy-question').textContent = q.question;
+    document.getElementById('jeopardy-question').textContent = getQuestionText(q);
     
-    // Show image if available
-    const imageDiv = document.getElementById('jeopardy-image');
-    if (q.image && typeof CHARACTERS !== 'undefined') {
-        const char = CHARACTERS.find(c => c.name.toLowerCase().replace(/ /g, '_') === q.image.toLowerCase());
-        if (char) {
-            imageDiv.innerHTML = `<img src="${char.image}" alt="?" class="jeopardy-char-img">`;
-            imageDiv.style.display = 'block';
-        } else {
-            imageDiv.style.display = 'none';
-        }
-    } else {
-        imageDiv.style.display = 'none';
-    }
-    
-    // Generate answer buttons
     const answersDiv = document.getElementById('jeopardy-answers');
     const letters = ['A', 'B', 'C', 'D'];
-    answersDiv.innerHTML = q.answers.map((answer, i) => `
+    const answers = getAnswers(q);
+    answersDiv.innerHTML = answers.map((answer, i) => `
         <button class="jeopardy-answer" data-index="${i}" onclick="selectAnswer(${i})">
             <span class="answer-letter">${letters[i]}</span>
             <span class="answer-text">${answer}</span>
         </button>
     `).join('');
     
-    // Reset lock button
     document.getElementById('jeopardy-lock-btn').disabled = true;
+    document.getElementById('jeopardy-lock-btn').textContent = getMeltdownText('lock');
     
-    // Update ladder
     updateLadder();
+    
+    // Start timer!
+    startTimer();
 }
 
 function selectAnswer(index) {
@@ -298,40 +600,123 @@ function selectAnswer(index) {
     
     JeopardyState.selectedAnswer = index;
     
-    // Update visual selection
     document.querySelectorAll('.jeopardy-answer').forEach((btn, i) => {
         btn.classList.toggle('selected', i === index);
     });
     
-    // Enable lock button
     document.getElementById('jeopardy-lock-btn').disabled = false;
     
-    // Play select sound
     if (typeof AudioSystem !== 'undefined') {
         AudioSystem.playTone(400, 0.1, 'sine', 0.2);
     }
 }
 
+// Psykologiske tricks - vælg tilfældig besked
+function getRandomPsychTrick() {
+    const tricks = [
+        'areYouSure',
+        'finalAnswer', 
+        'thinkAboutIt',
+        'bigMoney',
+        'loseItAll',
+        'stillTime',
+        'interestingChoice',
+        'mostPeopleWouldnt',
+        'youLookNervous',
+        'trustYourGut'
+    ];
+    
+    // Tilføj kontekst-specifikke tricks
+    if (!JeopardyState.lifelines.askAudience) {
+        tricks.push('audienceWrong');
+    }
+    if (!JeopardyState.lifelines.phoneAFriend) {
+        tricks.push('friendWrong');
+    }
+    
+    return tricks[Math.floor(Math.random() * tricks.length)];
+}
+
 function lockAnswer() {
     if (JeopardyState.selectedAnswer === null || JeopardyState.isAnswerLocked) return;
     
+    // 60% chance for "Er du sikker?" dialog (højere chance ved senere spørgsmål)
+    const psychChance = 0.4 + (JeopardyState.currentQuestion * 0.04); // 40% -> 96%
+    
+    if (Math.random() < psychChance && JeopardyState.currentQuestion >= 2) {
+        showAreYouSureDialog();
+        return;
+    }
+    
+    confirmLockAnswer();
+}
+
+function showAreYouSureDialog() {
+    const letters = ['A', 'B', 'C', 'D'];
+    const q = JeopardyState.questions[JeopardyState.currentQuestion];
+    const answers = getAnswers(q);
+    const selectedAnswer = answers[JeopardyState.selectedAnswer];
+    const selectedLetter = letters[JeopardyState.selectedAnswer];
+    const trickKey = getRandomPsychTrick();
+    const currentPrize = JeopardyState.currentQuestion > 0 ? formatPrize(PRIZE_LADDER[JeopardyState.currentQuestion - 1]) : '0 kr';
+    const nextPrize = formatPrize(PRIZE_LADDER[JeopardyState.currentQuestion]);
+    
+    const popup = document.createElement('div');
+    popup.className = 'lifeline-popup psych-popup';
+    popup.innerHTML = `
+        <div class="lifeline-popup-content psych-content">
+            <div class="psych-emoji">🎩</div>
+            <h2>${getJeopardyText('finalAnswer')}</h2>
+            <div class="psych-selected">
+                <span class="psych-letter">${selectedLetter}</span>
+                <span class="psych-answer">${selectedAnswer}</span>
+            </div>
+            <p class="psych-trick">${getJeopardyText(trickKey)}</p>
+            <p class="psych-stakes">💰 ${currentPrize} → ${nextPrize}</p>
+            <div class="psych-buttons">
+                <button class="psych-btn confirm-btn" onclick="closePsychAndLock()">
+                    ${getJeopardyText('confirm')} ✓
+                </button>
+                <button class="psych-btn change-btn" onclick="closePsychAndChange()">
+                    ${getJeopardyText('changeAnswer')} ✗
+                </button>
+            </div>
+        </div>
+    `;
+    document.getElementById('jeopardy-container').appendChild(popup);
+    
+    // Dramatisk lyd
+    if (typeof AudioSystem !== 'undefined') {
+        AudioSystem.playTone(150, 0.8, 'sine', 0.15);
+    }
+}
+
+function closePsychAndLock() {
+    document.querySelector('.psych-popup')?.remove();
+    confirmLockAnswer();
+}
+
+function closePsychAndChange() {
+    document.querySelector('.psych-popup')?.remove();
+    // Spilleren kan nu vælge et nyt svar
+}
+
+function confirmLockAnswer() {
     JeopardyState.isAnswerLocked = true;
+    stopTimer(); // Stop timer når svar låses
     document.getElementById('jeopardy-lock-btn').disabled = true;
     
     const q = JeopardyState.questions[JeopardyState.currentQuestion];
     const isCorrect = JeopardyState.selectedAnswer === q.correct;
     
-    // Dramatic pause then reveal
     const selectedBtn = document.querySelector(`.jeopardy-answer[data-index="${JeopardyState.selectedAnswer}"]`);
     selectedBtn.classList.add('locked');
     
-    // Play suspense sound
     if (typeof AudioSystem !== 'undefined') {
         AudioSystem.playTone(200, 0.5, 'sine', 0.1);
     }
     
     setTimeout(() => {
-        // Show correct answer
         document.querySelector(`.jeopardy-answer[data-index="${q.correct}"]`).classList.add('correct');
         
         if (isCorrect) {
@@ -342,14 +727,18 @@ function lockAnswer() {
                 AudioSystem.playCorrect();
             }
             
-            // Check if won
             if (JeopardyState.currentQuestion >= 14) {
                 setTimeout(() => winJeopardy(), 2000);
             } else {
-                setTimeout(() => {
-                    JeopardyState.currentQuestion++;
-                    showQuestion();
-                }, 2000);
+                // Check if we hit a safe haven - show host dialog
+                if (SAFE_HAVENS.includes(JeopardyState.currentQuestion)) {
+                    setTimeout(() => showHostDialog(), 1500);
+                } else {
+                    setTimeout(() => {
+                        JeopardyState.currentQuestion++;
+                        showQuestion();
+                    }, 2000);
+                }
             }
         } else {
             selectedBtn.classList.add('wrong');
@@ -358,14 +747,66 @@ function lockAnswer() {
                 AudioSystem.playWrong();
             }
             
-            setTimeout(() => loseJeopardy(), 2000);
+            setTimeout(() => showMeltdown(false), 2000);
         }
     }, 1500);
 }
 
+function showHostDialog() {
+    const currentPrize = formatPrize(PRIZE_LADDER[JeopardyState.currentQuestion]);
+    const nextQuestion = JeopardyState.currentQuestion + 2;
+    
+    const popup = document.createElement('div');
+    popup.className = 'lifeline-popup host-popup';
+    popup.innerHTML = `
+        <div class="lifeline-popup-content host-content">
+            <div class="host-emoji">🎩</div>
+            <h2>${getJeopardyText('hostAsk')}</h2>
+            <p class="host-message">${getJeopardyText('safeHavenReached')}</p>
+            <p class="host-prize">💰 ${currentPrize} 💰</p>
+            <p class="host-question">${getJeopardyText('hostMessage').replace('{prize}', currentPrize)}</p>
+            <div class="host-buttons">
+                <button class="host-btn stop-btn" onclick="walkAway()">
+                    ${getJeopardyText('stopHere')} 💰
+                </button>
+                <button class="host-btn continue-btn" onclick="continueAfterSafeHaven()">
+                    ${getJeopardyText('continueGame')} 🎯
+                </button>
+            </div>
+        </div>
+    `;
+    document.getElementById('jeopardy-container').appendChild(popup);
+}
+
+function walkAway() {
+    // Remove host popup
+    document.querySelector('.host-popup')?.remove();
+    
+    const finalPrize = PRIZE_LADDER[JeopardyState.currentQuestion];
+    
+    const popup = document.createElement('div');
+    popup.className = 'jeopardy-result-popup walkaway';
+    popup.innerHTML = `
+        <div class="result-content">
+            <h1>🎉 ${getJeopardyText('walkAway').toUpperCase()}! 🎉</h1>
+            <p class="result-subtitle">${getJeopardyText('youWon')}:</p>
+            <div class="result-prize">💰 ${formatPrize(finalPrize)} 💰</div>
+            <div class="result-emoji">🧠💵🇮🇹</div>
+            <button onclick="restartJeopardy()">${getJeopardyText('playAgain')}</button>
+        </div>
+    `;
+    document.getElementById('jeopardy-container').appendChild(popup);
+    createConfetti();
+}
+
+function continueAfterSafeHaven() {
+    document.querySelector('.host-popup')?.remove();
+    JeopardyState.currentQuestion++;
+    showQuestion();
+}
+
 function updateLadder() {
-    // Update all ladder steps
-    for (let i = 0; i < PRIZE_LADDER.length; i++) {
+    for (let i = 0; i < BRAIN_CELL_LADDER.length; i++) {
         const step = document.getElementById(`ladder-${i}`);
         if (step) {
             step.classList.remove('current', 'passed');
@@ -381,16 +822,14 @@ function updateLadder() {
 // ===== LIFELINES =====
 
 function useFiftyFifty() {
-    if (!JeopardyState.lifelines.fiftyFifty || JeopardyState.isAnswerLocked) return;
+    if (!JeopardyState.lifelines.brainBoost || JeopardyState.isAnswerLocked) return;
     
-    JeopardyState.lifelines.fiftyFifty = false;
+    JeopardyState.lifelines.brainBoost = false;
     document.getElementById('lifeline-5050').classList.add('used');
     document.getElementById('lifeline-5050').disabled = true;
     
     const q = JeopardyState.questions[JeopardyState.currentQuestion];
     const wrongAnswers = [0, 1, 2, 3].filter(i => i !== q.correct);
-    
-    // Remove 2 random wrong answers
     const toRemove = shuffleArray(wrongAnswers).slice(0, 2);
     
     toRemove.forEach(i => {
@@ -405,21 +844,20 @@ function useFiftyFifty() {
 }
 
 function useAskAudience() {
-    if (!JeopardyState.lifelines.askAudience || JeopardyState.isAnswerLocked) return;
+    if (!JeopardyState.lifelines.crowdChaos || JeopardyState.isAnswerLocked) return;
+    pauseTimer(); // Pause timer under lifeline
     
-    JeopardyState.lifelines.askAudience = false;
+    JeopardyState.lifelines.crowdChaos = false;
     document.getElementById('lifeline-audience').classList.add('used');
     document.getElementById('lifeline-audience').disabled = true;
     
     const q = JeopardyState.questions[JeopardyState.currentQuestion];
     
-    // Generate rigged percentages (correct answer gets 50-70%)
     const correctPercent = 50 + Math.floor(Math.random() * 21);
     let remaining = 100 - correctPercent;
     const percentages = [0, 0, 0, 0];
     percentages[q.correct] = correctPercent;
     
-    // Distribute remaining among wrong answers
     const wrongIndexes = [0, 1, 2, 3].filter(i => i !== q.correct);
     wrongIndexes.forEach((i, idx) => {
         if (idx === wrongIndexes.length - 1) {
@@ -431,7 +869,6 @@ function useAskAudience() {
         }
     });
     
-    // Show audience results popup
     showAudienceResults(percentages);
 }
 
@@ -440,93 +877,147 @@ function showAudienceResults(percentages) {
     const popup = document.createElement('div');
     popup.className = 'lifeline-popup';
     popup.innerHTML = `
-        <div class="lifeline-popup-content">
-            <h2>👥 PUBLIKUM SIGER:</h2>
-            <div class="audience-bars">
+        <div class="lifeline-popup-content audience-content">
+            <h2>${getMeltdownText('crowdSays')}</h2>
+            <div class="audience-chart">
                 ${percentages.map((p, i) => `
-                    <div class="audience-bar-container">
-                        <div class="audience-bar" style="height: ${p}%"></div>
-                        <span class="audience-percent">${p}%</span>
-                        <span class="audience-letter">${letters[i]}</span>
+                    <div class="audience-bar-wrapper">
+                        <div class="audience-percent-top">${p}%</div>
+                        <div class="audience-bar-bg">
+                            <div class="audience-bar-fill" style="height: 0%" data-height="${p}"></div>
+                        </div>
+                        <div class="audience-letter-bottom">${letters[i]}</div>
                     </div>
                 `).join('')}
             </div>
-            <button onclick="this.parentElement.parentElement.remove()">OK 👍</button>
+            <button onclick="this.parentElement.parentElement.remove(); resumeTimer();">${getMeltdownText('ok')}</button>
+        </div>
+    `;
+    document.getElementById('jeopardy-container').appendChild(popup);
+    
+    // Animate bars
+    setTimeout(() => {
+        popup.querySelectorAll('.audience-bar-fill').forEach(bar => {
+            bar.style.height = bar.dataset.height + '%';
+        });
+    }, 100);
+}
+
+function usePhoneAFriend() {
+    if (!JeopardyState.lifelines.callARot || JeopardyState.isAnswerLocked) return;
+    pauseTimer(); // Pause timer under lifeline
+    
+    // Vis Rot-vælger dialog
+    showFriendSelector();
+}
+
+function showFriendSelector() {
+    const popup = document.createElement('div');
+    popup.className = 'lifeline-popup friend-selector-popup';
+    popup.innerHTML = `
+        <div class="lifeline-popup-content friend-selector-content">
+            <h2>📞 ${getMeltdownText('chooseRot')}</h2>
+            <div class="friend-grid">
+                ${BRAINROT_FRIENDS.map((friend, index) => {
+                    const img = getFriendImage(friend.name);
+                    return `
+                        <div class="friend-option" onclick="selectFriend(${index})">
+                            <div class="friend-image-container">
+                                ${img ? `<img src="${img}" alt="${friend.name}" class="friend-image">` : `<span class="friend-emoji-large">${friend.emoji}</span>`}
+                            </div>
+                            <div class="friend-name">${friend.name}</div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+            <button class="cancel-btn" onclick="this.parentElement.parentElement.remove()">✕</button>
         </div>
     `;
     document.getElementById('jeopardy-container').appendChild(popup);
 }
 
-function usePhoneAFriend() {
-    if (!JeopardyState.lifelines.phoneAFriend || JeopardyState.isAnswerLocked) return;
+function selectFriend(friendIndex) {
+    // Fjern vælger
+    document.querySelector('.friend-selector-popup')?.remove();
     
-    JeopardyState.lifelines.phoneAFriend = false;
+    // Marker lifeline som brugt
+    JeopardyState.lifelines.callARot = false;
     document.getElementById('lifeline-phone').classList.add('used');
     document.getElementById('lifeline-phone').disabled = true;
     
+    const friend = BRAINROT_FRIENDS[friendIndex];
     const q = JeopardyState.questions[JeopardyState.currentQuestion];
-    const friend = BRAINROT_FRIENDS[Math.floor(Math.random() * BRAINROT_FRIENDS.length)];
     const letters = ['A', 'B', 'C', 'D'];
+    const lang = (typeof currentLanguage !== 'undefined') ? currentLanguage : 'da';
+    const answers = getAnswers(q);
     
-    // 70% chance correct, 30% chance wrong with hesitation
+    // 70% chance for korrekt svar
     const isCorrect = Math.random() < 0.7;
     let answerIndex, confidence, hesitation;
     
     if (isCorrect) {
         answerIndex = q.correct;
-        confidence = "Jeg er ret sikker!";
+        confidence = "";
         hesitation = "";
     } else {
-        // Pick a random wrong answer
         const wrongAnswers = [0, 1, 2, 3].filter(i => i !== q.correct);
         answerIndex = wrongAnswers[Math.floor(Math.random() * wrongAnswers.length)];
-        confidence = "...men æææh, jeg er ikke 100% sikker...";
-        hesitation = `Måske er det ${letters[q.correct]}? Nej nej, jeg tror det er `;
+        confidence = getMeltdownText('notSure');
+        hesitation = `${getMeltdownText('maybeBe')} ${letters[q.correct]}? ${getMeltdownText('noNo')} `;
     }
     
-    const answer = q.answers[answerIndex];
+    const answer = answers[answerIndex];
+    const catchphrase = friend.catchphrase[lang] || friend.catchphrase['da'];
     
-    // Show phone call popup
-    showPhoneCall(friend, letters[answerIndex], answer, confidence, hesitation);
+    showPhoneCall(friend, letters[answerIndex], answer, confidence, hesitation, catchphrase);
 }
 
-function showPhoneCall(friend, letter, answer, confidence, hesitation) {
+function showPhoneCall(friend, letter, answer, confidence, hesitation, catchphrase) {
+    const friendImg = getFriendImage(friend.name);
+    
     const popup = document.createElement('div');
     popup.className = 'lifeline-popup phone-popup';
     popup.innerHTML = `
-        <div class="lifeline-popup-content">
+        <div class="lifeline-popup-content phone-call-content">
             <div class="phone-header">
                 <span class="phone-emoji">📞</span>
-                <h2>Ringer til ${friend.name}...</h2>
+                <h2>${getMeltdownText('callingRot')} ${friend.name}...</h2>
             </div>
             <div class="phone-friend">
-                <span class="friend-emoji">${friend.emoji}</span>
+                ${friendImg ? `<img src="${friendImg}" alt="${friend.name}" class="phone-friend-image">` : `<span class="friend-emoji">${friend.emoji}</span>`}
             </div>
             <div class="phone-message">
-                <p class="friend-speech">"${friend.catchphrase}..."</p>
-                <p class="friend-thinking">🤔 *tænker*</p>
+                <p class="friend-speech">"${catchphrase}..."</p>
+                <p class="friend-thinking">${getMeltdownText('thinking')}</p>
                 <p class="friend-answer" style="display:none">
                     "${hesitation}<strong>${letter}: ${answer}</strong>!"
                 </p>
                 <p class="friend-confidence" style="display:none">"${confidence}"</p>
             </div>
-            <button class="phone-close" style="display:none" onclick="this.parentElement.parentElement.remove()">
-                Tak for hjælpen! 🙏
+            <button class="phone-close" style="display:none" onclick="this.parentElement.parentElement.remove(); resumeTimer();">
+                ${getMeltdownText('thanksForHelp')}
             </button>
         </div>
     `;
     document.getElementById('jeopardy-container').appendChild(popup);
     
-    // Animate the response
+    // Spil ring-lyd
+    if (typeof AudioSystem !== 'undefined') {
+        AudioSystem.playTone(440, 0.3, 'sine', 0.2);
+        setTimeout(() => AudioSystem.playTone(440, 0.3, 'sine', 0.2), 400);
+    }
+    
     setTimeout(() => {
         popup.querySelector('.friend-thinking').style.display = 'none';
         popup.querySelector('.friend-answer').style.display = 'block';
-    }, 2000);
+    }, 2500);
     
     setTimeout(() => {
-        popup.querySelector('.friend-confidence').style.display = 'block';
+        if (confidence) {
+            popup.querySelector('.friend-confidence').style.display = 'block';
+        }
         popup.querySelector('.phone-close').style.display = 'block';
-    }, 3000);
+    }, 3500);
 }
 
 // ===== WIN/LOSE =====
@@ -536,21 +1027,18 @@ function winJeopardy() {
     popup.className = 'jeopardy-result-popup win';
     popup.innerHTML = `
         <div class="result-content">
-            <h1>🎉 TILLYKKE! 🎉</h1>
-            <p class="result-subtitle">DU ER BRAINROT MILLIONÆR!</p>
+            <h1>${getJeopardyText('congrats')}</h1>
+            <p class="result-subtitle">${getJeopardyText('youAreMillionaire')}</p>
             <div class="result-prize">💰 ${formatPrize(1000000)} 💰</div>
             <div class="result-emoji">🧠🏆🇮🇹</div>
-            <button onclick="exitJeopardy()">SPIL IGEN 🔄</button>
+            <button onclick="restartJeopardy()">${getJeopardyText('playAgain')}</button>
         </div>
     `;
     document.getElementById('jeopardy-container').appendChild(popup);
-    
-    // Confetti effect
     createConfetti();
 }
 
 function loseJeopardy() {
-    // Calculate safe haven prize
     let finalPrize = 0;
     for (let i = SAFE_HAVENS.length - 1; i >= 0; i--) {
         if (JeopardyState.currentQuestion > SAFE_HAVENS[i]) {
@@ -563,24 +1051,26 @@ function loseJeopardy() {
     popup.className = 'jeopardy-result-popup lose';
     popup.innerHTML = `
         <div class="result-content">
-            <h1>💀 GAME OVER 💀</h1>
-            <p class="result-subtitle">Det var desværre forkert!</p>
-            <div class="result-prize">Du vandt: ${formatPrize(finalPrize)}</div>
-            <p>Du nåede spørgsmål ${JeopardyState.currentQuestion + 1}/15</p>
-            <button onclick="exitJeopardy()">PRØV IGEN 🔄</button>
+            <h1>${getJeopardyText('gameOver')}</h1>
+            <p class="result-subtitle">${getJeopardyText('wrongAnswer')}</p>
+            <div class="result-prize">${getJeopardyText('youWon')}: ${formatPrize(finalPrize)}</div>
+            <p>${getJeopardyText('youReached')} ${JeopardyState.currentQuestion + 1}/15</p>
+            <button onclick="restartJeopardy()">${getJeopardyText('playAgain')}</button>
         </div>
     `;
     document.getElementById('jeopardy-container').appendChild(popup);
 }
 
+function restartJeopardy() {
+    exitJeopardy();
+    setTimeout(() => startJeopardy(), 100);
+}
+
 function exitJeopardy() {
     JeopardyState.active = false;
+    stopTimer(); // Stop timer
     const container = document.getElementById('jeopardy-container');
     if (container) container.remove();
-    
-    // Show play button again
-    const playBtn = document.getElementById('play-quiz-btn');
-    if (playBtn) playBtn.style.display = '';
 }
 
 // ===== UTILITIES =====
@@ -602,9 +1092,8 @@ function createConfetti() {
         confetti.style.animationDelay = Math.random() * 2 + 's';
         confetti.style.backgroundColor = ['#ff10f0', '#00ffff', '#ffff00', '#ff6600', '#00ff00'][Math.floor(Math.random() * 5)];
         document.getElementById('jeopardy-container').appendChild(confetti);
-        
         setTimeout(() => confetti.remove(), 4000);
     }
 }
 
-console.log('🎮 Brainrot Jeopardy loaded!');
+console.log('🧠💥 Brain Meltdown loaded!');
