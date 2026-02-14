@@ -63,6 +63,11 @@ const BRAINROT_SOUNDS = [
 
 let currentAudio = null;
 let radioPlaying = false;
+let audioUnlocked = false;
+
+// Pre-create audio element for mobile compatibility
+const radioAudio = new Audio();
+radioAudio.volume = 0.7;
 
 function toggleBrainrotRadio() {
     const btn = document.getElementById('random-sound-btn');
@@ -70,59 +75,62 @@ function toggleBrainrotRadio() {
     if (radioPlaying) {
         // Stop radio
         radioPlaying = false;
-        if (currentAudio) {
-            currentAudio.pause();
-            currentAudio = null;
-        }
+        radioAudio.pause();
+        radioAudio.currentTime = 0;
         if (btn) {
             btn.innerHTML = '📻 BRAINROT RADIO';
             btn.style.background = 'linear-gradient(145deg, #ff6600, #ffcc00)';
             btn.style.animation = 'none';
         }
     } else {
-        // Start radio
+        // Start radio - play immediately in click handler for mobile!
         radioPlaying = true;
         if (btn) {
             btn.innerHTML = '⏹️ STOP RADIO';
             btn.style.background = 'linear-gradient(145deg, #ff0000, #cc0000)';
+            btn.style.animation = 'radioPulse 1s ease-in-out infinite';
         }
-        playNextTrack();
+        
+        // Pick random sound and play IMMEDIATELY (important for mobile)
+        const randomSound = BRAINROT_SOUNDS[Math.floor(Math.random() * BRAINROT_SOUNDS.length)];
+        radioAudio.src = randomSound;
+        
+        // Play immediately - this is in the click handler so it works on mobile
+        const playPromise = radioAudio.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(e => {
+                console.log('Radio play failed:', e);
+                // Show user they need to tap again
+                if (btn) {
+                    btn.innerHTML = '🔊 TAP AGAIN';
+                    setTimeout(() => {
+                        if (!radioPlaying) btn.innerHTML = '📻 BRAINROT RADIO';
+                    }, 2000);
+                }
+                radioPlaying = false;
+            });
+        }
     }
 }
 
-function playNextTrack() {
-    if (!radioPlaying) return;
-    
-    // Pick random sound
-    const randomSound = BRAINROT_SOUNDS[Math.floor(Math.random() * BRAINROT_SOUNDS.length)];
-    
-    // Play it
-    currentAudio = new Audio(randomSound);
-    currentAudio.volume = 0.7;
-    
-    // When track ends, play next one
-    currentAudio.onended = () => {
-        if (radioPlaying) {
-            playNextTrack();
-        }
-    };
-    
-    currentAudio.play().catch(e => {
-        console.log('Audio play failed:', e);
-        // Try next track if this one fails
-        if (radioPlaying) {
-            setTimeout(playNextTrack, 500);
-        }
-    });
-    
-    // Visual feedback - make button pulse
-    const btn = document.getElementById('random-sound-btn');
-    if (btn && radioPlaying) {
-        btn.style.animation = 'none';
-        btn.offsetHeight; // Trigger reflow
-        btn.style.animation = 'radioPulse 1s ease-in-out infinite';
+// When track ends, play next one
+radioAudio.onended = () => {
+    if (radioPlaying) {
+        const randomSound = BRAINROT_SOUNDS[Math.floor(Math.random() * BRAINROT_SOUNDS.length)];
+        radioAudio.src = randomSound;
+        radioAudio.play().catch(e => console.log('Next track failed:', e));
     }
-}
+};
+
+// Handle errors - try next track
+radioAudio.onerror = () => {
+    if (radioPlaying) {
+        console.log('Track error, trying next...');
+        const randomSound = BRAINROT_SOUNDS[Math.floor(Math.random() * BRAINROT_SOUNDS.length)];
+        radioAudio.src = randomSound;
+        radioAudio.play().catch(e => console.log('Recovery failed:', e));
+    }
+};
 
 // Legacy function for backwards compatibility
 function playRandomBrainrotSound() {
