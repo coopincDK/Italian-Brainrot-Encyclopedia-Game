@@ -11,7 +11,8 @@ const JeopardyState = {
     active: false,
     currentQuestion: 0,
     score: 0,
-    brainCells: 0,  // Starter ved 0, samler op!
+    totalBrainCells: 0,      // Total opsamlede hjerneceller
+    currentPotential: 0,     // Nuværende potentielle celler (tæller ned)
     lifelines: {
         brainBoost: true,      // 50:50 - fjerner 2 forkerte svar
         crowdChaos: true,      // Crowd Chaos - spørg publikum  
@@ -284,7 +285,8 @@ function startJeopardy() {
     JeopardyState.active = true;
     JeopardyState.currentQuestion = 0;
     JeopardyState.score = 0;
-    JeopardyState.brainCells = 0;
+    JeopardyState.totalBrainCells = 0;  // Reset total
+    JeopardyState.currentPotential = 0;  // Reset potential
     JeopardyState.lifelines = { 
         brainBoost: true, 
         crowdChaos: true, 
@@ -296,15 +298,13 @@ function startJeopardy() {
     JeopardyState.isAnswerLocked = false;
     JeopardyState.timeLeft = 10;
     JeopardyState.timerPaused = false;
+    JeopardyState.baseTime = DEFAULT_TIME;
     
     document.getElementById('game-mode-selection').style.display = 'none';
     
     showJeopardyUI();
     showQuestion();
 }
-
-// Alias for backward compatibility
-function showMeltdownUI() { showJeopardyUI(); }
 
 function showJeopardyUI() {
     const existing = document.getElementById('jeopardy-container');
@@ -323,7 +323,18 @@ function showJeopardyUI() {
                 <p class="meltdown-subtitle">${getMeltdownText('subtitle')}</p>
                 <div class="jeopardy-progress">
                     <span id="jeopardy-question-num">${getMeltdownText('question')} 1/15</span>
-                    <span id="jeopardy-prize">🧠 0 ${getMeltdownText('brainCells')}</span>
+                </div>
+            </div>
+            
+            <!-- SCORE DISPLAY -->
+            <div class="meltdown-score-display">
+                <div class="score-total">
+                    <span class="score-label">🧠 TOTAL:</span>
+                    <span class="score-value" id="total-cells">0</span>
+                </div>
+                <div class="score-potential">
+                    <span class="score-label">⚡ NU:</span>
+                    <span class="score-value counting" id="potential-cells">0</span>
                 </div>
             </div>
             
@@ -394,26 +405,9 @@ function generateBrainLadder() {
     ladder.innerHTML = html;
 }
 
-function generatePrizeLadder() {
-    const ladder = document.getElementById('jeopardy-ladder');
-    let html = `<div class="ladder-title">${getJeopardyText('prizeLadder')}</div>`;
-    
-    for (let i = PRIZE_LADDER.length - 1; i >= 0; i--) {
-        const isSafe = SAFE_HAVENS.includes(i);
-        const isCurrent = i === JeopardyState.currentQuestion;
-        html += `
-            <div class="ladder-step ${isSafe ? 'safe' : ''} ${isCurrent ? 'current' : ''}" id="ladder-${i}">
-                <span class="ladder-num">${i + 1}</span>
-                <span class="ladder-prize">${formatPrize(PRIZE_LADDER[i])}</span>
-            </div>
-        `;
-    }
-    
-    ladder.innerHTML = html;
-}
-
+// Beholdt for backward compatibility
 function formatPrize(amount) {
-    return amount.toLocaleString('da-DK') + ' kr';
+    return formatBrainCells(amount);
 }
 
 function formatBrainCells(amount) {
@@ -423,19 +417,34 @@ function formatBrainCells(amount) {
 }
 
 // ===== TIMER SYSTEM =====
+const DEFAULT_TIME = 10; // 10 sekunder per spørgsmål
+
 function startTimer() {
     stopTimer();
     JeopardyState.timeLeft = JeopardyState.baseTime;
     JeopardyState.timerPaused = false;
+    
+    // Sæt potentielle hjerneceller til max for dette niveau
+    const maxCells = BRAIN_CELL_LADDER[JeopardyState.currentQuestion];
+    JeopardyState.currentPotential = maxCells;
+    
     updateTimerDisplay();
+    updatePotentialDisplay();
     
     JeopardyState.timerInterval = setInterval(() => {
         if (JeopardyState.timerPaused) return;
         
         JeopardyState.timeLeft -= 0.1;
+        
+        // Beregn potentielle celler baseret på tid tilbage (procent af max)
+        const timePercent = JeopardyState.timeLeft / JeopardyState.baseTime;
+        JeopardyState.currentPotential = Math.floor(maxCells * timePercent);
+        
         updateTimerDisplay();
+        updatePotentialDisplay();
         
         if (JeopardyState.timeLeft <= 0) {
+            JeopardyState.currentPotential = 0;
             stopTimer();
             timeUp();
         }
@@ -479,6 +488,47 @@ function updateTimerDisplay() {
     timerText.textContent = Math.ceil(JeopardyState.timeLeft) + ' ' + getMeltdownText('seconds');
 }
 
+function updatePotentialDisplay() {
+    const prizeEl = document.getElementById('jeopardy-prize');
+    const potentialEl = document.getElementById('potential-cells');
+    
+    if (potentialEl) {
+        potentialEl.textContent = formatBrainCells(JeopardyState.currentPotential);
+        // Farve baseret på hvor meget der er tilbage
+        const maxCells = BRAIN_CELL_LADDER[JeopardyState.currentQuestion];
+        const percent = (JeopardyState.currentPotential / maxCells) * 100;
+        if (percent > 50) {
+            potentialEl.style.color = '#00ff00';
+        } else if (percent > 25) {
+            potentialEl.style.color = '#ffff00';
+        } else {
+            potentialEl.style.color = '#ff4444';
+        }
+    }
+}
+
+function updateTotalDisplay() {
+    const totalEl = document.getElementById('total-cells');
+    if (totalEl) {
+        totalEl.textContent = JeopardyState.totalBrainCells.toLocaleString();
+        // Pulse animation
+        totalEl.classList.add('pulse');
+        setTimeout(() => totalEl.classList.remove('pulse'), 500);
+    }
+}
+
+function showCellsEarned(amount) {
+    const container = document.getElementById('jeopardy-container');
+    if (!container) return;
+    
+    const popup = document.createElement('div');
+    popup.className = 'cells-earned-popup';
+    popup.innerHTML = `+${amount.toLocaleString()} 🧠`;
+    container.appendChild(popup);
+    
+    setTimeout(() => popup.remove(), 1500);
+}
+
 function timeUp() {
     JeopardyState.isAnswerLocked = true;
     if (typeof AudioSystem !== 'undefined') {
@@ -498,8 +548,9 @@ function useGiveMe2() {
         btn.disabled = true;
     }
     
+    // Tilføj 2 minutter (120 sek) KUN til dette spørgsmål
     JeopardyState.timeLeft += 120;
-    JeopardyState.baseTime = JeopardyState.timeLeft;
+    JeopardyState.baseTime = JeopardyState.timeLeft; // Opdater for korrekt progress bar
     
     const popup = document.createElement('div');
     popup.className = 'time-bonus-popup';
@@ -518,8 +569,11 @@ function useGiveMe2() {
 function showMeltdown(isTimeout = false) {
     stopTimer();
     
-    const checkpointCells = getCheckpointCells();
+    const finalScore = JeopardyState.totalBrainCells;
     const message = isTimeout ? getMeltdownText('timeUp') : getMeltdownText('wrongAnswer');
+    
+    // Gem score
+    saveMeltdownScore(finalScore, JeopardyState.currentQuestion + 1, false);
     
     const popup = document.createElement('div');
     popup.className = 'meltdown-popup';
@@ -528,13 +582,19 @@ function showMeltdown(isTimeout = false) {
             <h1>${getMeltdownText('meltdown')}</h1>
             <div class="meltdown-brain">🧠💥</div>
             <p class="meltdown-message">${message}</p>
-            <p class="meltdown-collected">
-                ${getMeltdownText('youCollected')} <strong>${formatBrainCells(checkpointCells)}</strong>
-                ${checkpointCells > 0 ? '<br><small>(' + getMeltdownText('checkpoint') + ')</small>' : ''}
-            </p>
-            <button class="meltdown-btn" onclick="restartMeltdown()">
-                ${getMeltdownText('playAgain')}
-            </button>
+            <div class="result-score">
+                <span class="score-label">🧠 ${getMeltdownText('youCollected')}:</span>
+                <span class="score-final">${finalScore.toLocaleString()}</span>
+            </div>
+            <p style="color: #888;">${getMeltdownText('question')} ${JeopardyState.currentQuestion + 1}/15</p>
+            <div class="result-buttons">
+                <button class="meltdown-btn" onclick="restartMeltdown()">
+                    ${getMeltdownText('playAgain')}
+                </button>
+                <button class="scoreboard-btn" onclick="showMeltdownScoreboard()">
+                    🏆 Scoreboard
+                </button>
+            </div>
         </div>
     `;
     document.getElementById('jeopardy-container')?.appendChild(popup);
@@ -567,15 +627,14 @@ function showQuestion() {
     
     JeopardyState.selectedAnswer = null;
     JeopardyState.isAnswerLocked = false;
-    JeopardyState.baseTime = 10; // Reset til 10 sekunder
+    JeopardyState.baseTime = DEFAULT_TIME; // Reset til 10 sekunder per spørgsmål
     
-    // Opdater header med hjerneceller
+    // Opdater header
     document.getElementById('jeopardy-question-num').textContent = 
         `${getMeltdownText('question')} ${JeopardyState.currentQuestion + 1}/15`;
     
-    const currentCells = JeopardyState.currentQuestion > 0 ? BRAIN_CELL_LADDER[JeopardyState.currentQuestion - 1] : 0;
-    document.getElementById('jeopardy-prize').textContent = 
-        `🧠 ${formatBrainCells(currentCells)}`;
+    // Opdater total display
+    updateTotalDisplay();
     
     document.getElementById('jeopardy-question').textContent = getQuestionText(q);
     
@@ -661,8 +720,8 @@ function showAreYouSureDialog() {
     const selectedAnswer = answers[JeopardyState.selectedAnswer];
     const selectedLetter = letters[JeopardyState.selectedAnswer];
     const trickKey = getRandomPsychTrick();
-    const currentPrize = JeopardyState.currentQuestion > 0 ? formatPrize(PRIZE_LADDER[JeopardyState.currentQuestion - 1]) : '0 kr';
-    const nextPrize = formatPrize(PRIZE_LADDER[JeopardyState.currentQuestion]);
+    const currentPrize = JeopardyState.currentQuestion > 0 ? formatBrainCells(BRAIN_CELL_LADDER[JeopardyState.currentQuestion - 1]) : '0 kr';
+    const nextPrize = formatBrainCells(BRAIN_CELL_LADDER[JeopardyState.currentQuestion]);
     
     const popup = document.createElement('div');
     popup.className = 'lifeline-popup psych-popup';
@@ -724,7 +783,15 @@ function confirmLockAnswer() {
         
         if (isCorrect) {
             selectedBtn.classList.add('correct');
-            JeopardyState.score = PRIZE_LADDER[JeopardyState.currentQuestion];
+            
+            // Tilføj de opnåede hjerneceller til total
+            const earnedCells = JeopardyState.currentPotential;
+            JeopardyState.totalBrainCells += earnedCells;
+            JeopardyState.score = JeopardyState.totalBrainCells;
+            
+            // Opdater display
+            updateTotalDisplay();
+            showCellsEarned(earnedCells);
             
             if (typeof AudioSystem !== 'undefined') {
                 AudioSystem.playCorrect();
@@ -734,7 +801,7 @@ function confirmLockAnswer() {
                 setTimeout(() => winJeopardy(), 2000);
             } else {
                 // Check if we hit a safe haven - show host dialog
-                if (SAFE_HAVENS.includes(JeopardyState.currentQuestion)) {
+                if (BRAIN_CHECKPOINTS.includes(JeopardyState.currentQuestion)) {
                     setTimeout(() => showHostDialog(), 1500);
                 } else {
                     setTimeout(() => {
@@ -756,7 +823,7 @@ function confirmLockAnswer() {
 }
 
 function showHostDialog() {
-    const currentPrize = formatPrize(PRIZE_LADDER[JeopardyState.currentQuestion]);
+    const currentPrize = formatBrainCells(BRAIN_CELL_LADDER[JeopardyState.currentQuestion]);
     const nextQuestion = JeopardyState.currentQuestion + 2;
     
     const popup = document.createElement('div');
@@ -785,7 +852,7 @@ function walkAway() {
     // Remove host popup
     document.querySelector('.host-popup')?.remove();
     
-    const finalPrize = PRIZE_LADDER[JeopardyState.currentQuestion];
+    const finalPrize = BRAIN_CELL_LADDER[JeopardyState.currentQuestion];
     
     const popup = document.createElement('div');
     popup.className = 'jeopardy-result-popup walkaway';
@@ -1026,39 +1093,58 @@ function showPhoneCall(friend, letter, answer, confidence, hesitation, catchphra
 // ===== WIN/LOSE =====
 
 function winJeopardy() {
+    stopTimer();
+    
+    // Tilføj sidste spørgsmåls celler til total
+    JeopardyState.totalBrainCells += JeopardyState.currentPotential;
+    const finalScore = JeopardyState.totalBrainCells;
+    
+    // Gem score
+    saveMeltdownScore(finalScore, 15, true);
+    
     const popup = document.createElement('div');
-    popup.className = 'jeopardy-result-popup win';
+    popup.className = 'jeopardy-result-popup win meltdown-result galaxy-brain';
     popup.innerHTML = `
         <div class="result-content">
-            <h1>${getJeopardyText('congrats')}</h1>
-            <p class="result-subtitle">${getJeopardyText('youAreMillionaire')}</p>
-            <div class="result-prize">💰 ${formatPrize(1000000)} 💰</div>
-            <div class="result-emoji">🧠🏆🇮🇹</div>
-            <button onclick="restartJeopardy()">${getJeopardyText('playAgain')}</button>
+            <h1>🌟 ${getMeltdownText('congrats')} 🌟</h1>
+            <p class="result-subtitle">${getMeltdownText('youAreGalaxyBrain')}</p>
+            <div class="result-score galaxy">
+                <span class="score-label">🧠 TOTAL:</span>
+                <span class="score-final">${finalScore.toLocaleString()}</span>
+            </div>
+            <div class="result-emoji">🧠🏆🌌</div>
+            <div class="result-buttons">
+                <button onclick="restartJeopardy()">${getMeltdownText('playAgain')}</button>
+                <button onclick="showMeltdownScoreboard()" class="scoreboard-btn">🏆 Scoreboard</button>
+            </div>
         </div>
     `;
     document.getElementById('jeopardy-container').appendChild(popup);
     createConfetti();
 }
 
-function loseJeopardy() {
-    let finalPrize = 0;
-    for (let i = SAFE_HAVENS.length - 1; i >= 0; i--) {
-        if (JeopardyState.currentQuestion > SAFE_HAVENS[i]) {
-            finalPrize = PRIZE_LADDER[SAFE_HAVENS[i]];
-            break;
-        }
-    }
+function loseJeopardy(isTimeout = false) {
+    stopTimer();
+    const finalScore = JeopardyState.totalBrainCells;
+    
+    // Gem score
+    saveMeltdownScore(finalScore, JeopardyState.currentQuestion + 1);
     
     const popup = document.createElement('div');
-    popup.className = 'jeopardy-result-popup lose';
+    popup.className = 'jeopardy-result-popup lose meltdown-result';
     popup.innerHTML = `
         <div class="result-content">
-            <h1>${getJeopardyText('gameOver')}</h1>
-            <p class="result-subtitle">${getJeopardyText('wrongAnswer')}</p>
-            <div class="result-prize">${getJeopardyText('youWon')}: ${formatPrize(finalPrize)}</div>
-            <p>${getJeopardyText('youReached')} ${JeopardyState.currentQuestion + 1}/15</p>
-            <button onclick="restartJeopardy()">${getJeopardyText('playAgain')}</button>
+            <h1>💥 ${getMeltdownText('meltdown')} 💥</h1>
+            <p class="result-subtitle">${isTimeout ? getMeltdownText('timeUp') : getMeltdownText('wrongAnswer')}</p>
+            <div class="result-score">
+                <span class="score-label">🧠 ${getMeltdownText('youCollected')}:</span>
+                <span class="score-final">${finalScore.toLocaleString()}</span>
+            </div>
+            <p>${getMeltdownText('question')} ${JeopardyState.currentQuestion + 1}/15</p>
+            <div class="result-buttons">
+                <button onclick="restartJeopardy()">${getMeltdownText('playAgain')}</button>
+                <button onclick="showMeltdownScoreboard()" class="scoreboard-btn">🏆 Scoreboard</button>
+            </div>
         </div>
     `;
     document.getElementById('jeopardy-container').appendChild(popup);
@@ -1097,6 +1183,183 @@ function createConfetti() {
         document.getElementById('jeopardy-container').appendChild(confetti);
         setTimeout(() => confetti.remove(), 4000);
     }
+}
+
+// ===== SCOREBOARD SYSTEM =====
+const MELTDOWN_STORAGE_KEY = 'brainMeltdownScores';
+
+function getLocalScores() {
+    try {
+        const data = localStorage.getItem(MELTDOWN_STORAGE_KEY);
+        return data ? JSON.parse(data) : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function saveLocalScore(score, level, isWin = false) {
+    const scores = getLocalScores();
+    const playerName = localStorage.getItem('playerName') || 'Anonymous';
+    
+    scores.push({
+        name: playerName,
+        score: score,
+        level: level,
+        isWin: isWin,
+        date: new Date().toISOString()
+    });
+    
+    // Sorter og behold top 10
+    scores.sort((a, b) => b.score - a.score);
+    const top10 = scores.slice(0, 10);
+    
+    localStorage.setItem(MELTDOWN_STORAGE_KEY, JSON.stringify(top10));
+    return top10;
+}
+
+async function saveMeltdownScore(score, level, isWin = false) {
+    // Gem lokalt
+    saveLocalScore(score, level, isWin);
+    
+    // Gem til Firebase hvis tilgængelig
+    if (typeof firebase !== 'undefined' && firebase.database) {
+        try {
+            const playerName = localStorage.getItem('playerName') || 'Anonymous';
+            await firebase.database().ref('meltdown-scores').push({
+                name: playerName,
+                score: score,
+                level: level,
+                isWin: isWin,
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            });
+            console.log('💾 Score saved to Firebase!');
+        } catch (e) {
+            console.warn('Could not save to Firebase:', e);
+        }
+    }
+}
+
+async function getGlobalScores() {
+    if (typeof firebase === 'undefined' || !firebase.database) {
+        return [];
+    }
+    
+    try {
+        const snapshot = await firebase.database()
+            .ref('meltdown-scores')
+            .orderByChild('score')
+            .limitToLast(10)
+            .once('value');
+        
+        const scores = [];
+        snapshot.forEach(child => {
+            scores.push(child.val());
+        });
+        
+        return scores.reverse(); // Højeste først
+    } catch (e) {
+        console.warn('Could not fetch global scores:', e);
+        return [];
+    }
+}
+
+async function showMeltdownScoreboard() {
+    const localScores = getLocalScores();
+    const globalScores = await getGlobalScores();
+    
+    // Fjern eksisterende popup
+    document.querySelector('.meltdown-scoreboard')?.remove();
+    
+    const popup = document.createElement('div');
+    popup.className = 'meltdown-scoreboard';
+    popup.innerHTML = `
+        <div class="scoreboard-overlay" onclick="closeMeltdownScoreboard()"></div>
+        <div class="scoreboard-content">
+            <button class="scoreboard-close" onclick="closeMeltdownScoreboard()">✕</button>
+            <h1>🏆 BRAIN MELTDOWN SCOREBOARD 🏆</h1>
+            
+            <div class="scoreboard-tabs">
+                <button class="tab-btn active" onclick="switchScoreboardTab('local')">🏠 Lokal</button>
+                <button class="tab-btn" onclick="switchScoreboardTab('global')">🌍 Global</button>
+            </div>
+            
+            <div class="scoreboard-table" id="scoreboard-local">
+                <div class="scoreboard-header">
+                    <span>#</span>
+                    <span>Navn</span>
+                    <span>🧠 Score</span>
+                    <span>Level</span>
+                </div>
+                ${localScores.length === 0 ? '<div class="no-scores">Ingen scores endnu!</div>' : 
+                    localScores.map((s, i) => `
+                        <div class="scoreboard-row ${s.isWin ? 'winner' : ''} ${i < 3 ? 'top-' + (i+1) : ''}">
+                            <span class="rank">${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}</span>
+                            <span class="name">${s.name}</span>
+                            <span class="score">${s.score.toLocaleString()}</span>
+                            <span class="level">${s.level}/15 ${s.isWin ? '🌟' : ''}</span>
+                        </div>
+                    `).join('')
+                }
+            </div>
+            
+            <div class="scoreboard-table hidden" id="scoreboard-global">
+                <div class="scoreboard-header">
+                    <span>#</span>
+                    <span>Navn</span>
+                    <span>🧠 Score</span>
+                    <span>Level</span>
+                </div>
+                ${globalScores.length === 0 ? '<div class="no-scores">Ingen globale scores endnu!</div>' : 
+                    globalScores.map((s, i) => `
+                        <div class="scoreboard-row ${s.isWin ? 'winner' : ''} ${i < 3 ? 'top-' + (i+1) : ''}">
+                            <span class="rank">${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}</span>
+                            <span class="name">${s.name}</span>
+                            <span class="score">${s.score.toLocaleString()}</span>
+                            <span class="level">${s.level}/15 ${s.isWin ? '🌟' : ''}</span>
+                        </div>
+                    `).join('')
+                }
+            </div>
+            
+            <div class="scoreboard-input">
+                <label>👤 Dit navn:</label>
+                <input type="text" id="player-name-input" 
+                       value="${localStorage.getItem('playerName') || ''}" 
+                       placeholder="Indtast dit navn..."
+                       maxlength="20">
+                <button onclick="savePlayerName()">Gem</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(popup);
+}
+
+function closeMeltdownScoreboard() {
+    document.querySelector('.meltdown-scoreboard')?.remove();
+}
+
+function switchScoreboardTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.scoreboard-table').forEach(t => t.classList.add('hidden'));
+    
+    if (tab === 'local') {
+        document.querySelector('.tab-btn:first-child').classList.add('active');
+        document.getElementById('scoreboard-local').classList.remove('hidden');
+    } else {
+        document.querySelector('.tab-btn:last-child').classList.add('active');
+        document.getElementById('scoreboard-global').classList.remove('hidden');
+    }
+}
+
+function savePlayerName() {
+    const input = document.getElementById('player-name-input');
+    const name = input.value.trim() || 'Anonymous';
+    localStorage.setItem('playerName', name);
+    
+    // Vis bekræftelse
+    input.style.borderColor = '#00ff00';
+    setTimeout(() => input.style.borderColor = '', 1000);
 }
 
 console.log('🧠💥 Brain Meltdown loaded!');
