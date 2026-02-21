@@ -25,6 +25,21 @@
     
     <meta name="description" content="The ultimate Italian Brainrot character encyclopedia! Explore crazy AI-generated characters with wild 3D effects!">
     <meta name="theme-color" content="#ff10f0">
+    
+    <!-- Service Worker for offline support -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((registration) => {
+                        console.log('✅ Service Worker registered for offline support');
+                    })
+                    .catch((error) => {
+                        console.log('⚠️ Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
 </head>
 <body>
     <!-- PARTICLES (GPU Optimized) -->
