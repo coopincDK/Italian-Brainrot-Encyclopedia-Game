@@ -575,6 +575,9 @@ function showMeltdown(isTimeout = false) {
     // Gem score
     saveMeltdownScore(finalScore, JeopardyState.currentQuestion + 1, false);
     
+    // PLAY JUMPSCARE SOUND! 🎵
+    playJumpscare();
+    
     const popup = document.createElement('div');
     popup.className = 'meltdown-popup';
     popup.innerHTML = `
@@ -1350,6 +1353,23 @@ function switchScoreboardTab(tab) {
         document.querySelector('.tab-btn:last-child').classList.add('active');
         document.getElementById('scoreboard-global').classList.remove('hidden');
     }
+}
+
+// ===== JUMPSCARE SOUND =====
+function playJumpscare() {
+    // Vælg tilfældig jumpscare lyd (38 eller 71)
+    const jumpscares = [
+        'Sound/38_GYYAAAAAT.mp3',
+        'Sound/71_GYAAAAAAAAAT_bass_boosted.mp3'
+    ];
+    
+    const randomJumpscare = jumpscares[Math.floor(Math.random() * jumpscares.length)];
+    const jumpscare = new Audio(randomJumpscare);
+    jumpscare.volume = 0.8; // Høj volume for jumpscare effekt!
+    
+    jumpscare.play().catch(e => {
+        console.log('Jumpscare failed:', e);
+    });
 }
 
 function savePlayerName() {
